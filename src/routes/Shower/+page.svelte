@@ -99,7 +99,7 @@
         View Statistics
       </button>
       <button on:click={() => window.history.back()} class="bg-red-500 text-white py-3 px-4 rounded-lg shadow-md hover:bg-red-600 focus:outline-none">
-        Back to Main
+        Back to Waterlog
       </button>
     </div>
   </div>
