@@ -52,7 +52,7 @@
 
       <!-- Shower Button Container -->    
       <div class="space-y-4">
-        <a href="/shower">
+        <a href="/waterlog/shower">
           <button class="w-full bg-green-500 text-white py-3 px-4 rounded-lg shadow-md hover:bg-green-600 focus:outline-none flex justify-between items-center">
             <span class="text-xl font-bold">Shower</span>
             <img src="/shower.svg" alt="Shower" class="w-50 h-100" />
@@ -62,7 +62,7 @@
   
       <!-- Sink Button Container -->
       <div class="space-y-4">
-        <a href="/sink">
+        <a href="/waterlog/sink">
           <button class="w-full bg-green-500 text-white py-3 px-4 rounded-lg shadow-md hover:bg-green-600 focus:outline-none flex justify-between items-center">
             <span class="text-xl font-bold">Sink</span>
             <img src="/sink.svg" alt="Sink" class="w-50 h-100" />
@@ -72,7 +72,7 @@
   
       <!-- Washing Button Container -->
       <div class="space-y-4">
-        <a href="/washing">
+        <a href="/waterlog/washing">
         <button class="w-full bg-green-500 text-white py-3 px-4 rounded-lg shadow-md hover:bg-green-600 focus:outline-none flex justify-between items-center">
           <span class="text-xl font-bold">Washing</span>
           <img src="/washing.svg" alt="Washing" class="w-50 h-100" />
@@ -82,7 +82,7 @@
   
       <!-- Toilet Button Container -->
       <div class="space-y-4">
-        <a href="/toilet">
+        <a href="/waterlog/toilet">
         <button class="w-full bg-green-500 text-white py-3 px-4 rounded-lg shadow-md hover:bg-green-600 focus:outline-none flex justify-between items-center">
           <span class="text-xl font-bold">Toilet</span>
           <img src="/toilet.svg" alt="Toilet" class="w-50 h-100" />
@@ -92,7 +92,7 @@
   
       <!-- Other Button Container -->
       <div class="space-y-4">
-        <a href="/other">
+        <a href="/waterlog/other">
         <button class="w-full bg-green-500 text-white py-3 px-4 rounded-lg shadow-md hover:bg-green-600 focus:outline-none flex justify-between items-center">
           <span class="text-xl font-bold">Other</span>
           <img src="/other.svg" alt="Other" class="w-50 h-100" />
