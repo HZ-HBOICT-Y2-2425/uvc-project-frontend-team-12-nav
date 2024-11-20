@@ -49,18 +49,28 @@
         }
     };
 
-    // Submit all data and calculate the total
-    const submitAllData = () => {
-        const totalUsage = Object.values(categoryData).reduce((sum, count) => sum + count, 0);
-        alert(`Total water usage for the day: ${totalUsage}`);
-        // Logic for submitting data, e.g., sending to a server, can go here
+   // Submit all data and calculate the total number of uses
+const submitAllData = () => {
+    // Calculate total number of uses by summing all values in categoryData
+    const totalUses = Object.entries(categoryData).reduce(
+        (sum, [_, uses]) => sum + uses, 
+        0
+    );
 
-        // Optionally reset data for a new day
-        if (typeof window !== 'undefined') {
-            localStorage.removeItem("categoryData");
-        }
-        categoryData = {};
-    };
+    // Display total uses to the user
+    alert(`Total water usage for the day: ${totalUses} uses`);
+
+    // Logic for submitting data, e.g., sending to a server, can go here
+
+    // Optionally reset data for a new day
+    if (typeof window !== 'undefined') {
+        localStorage.removeItem("categoryData");
+    }
+
+    // Reset category data
+    categoryData = {};
+};
+
 
     // Navigate back to the waterlog page
     const goBack = () => {
