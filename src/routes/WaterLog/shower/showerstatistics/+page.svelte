@@ -1,6 +1,6 @@
 <script>
   // Mock Data: Replace with actual data from the backend in a real app
-  let todayShowerTime = 5; // in minutes
+  let todayShowerTime = 1; // in minutes
   let yesterdayShowerTime = 7; // in minutes
 
   // Calculate water usage (e.g., 10 liters per minute)
@@ -13,9 +13,11 @@
   const bottlesForYesterday = Array(yesterdayWaterUsage).fill(1);
 </script>
 
-<div class="min-h-screen bg-blue-50 flex flex-col items-center justify-center py-10">
-  <!-- Page Header -->
-  <h1 class="text-3xl font-bold text-green-600 mb-6">Shower Statistics</h1>
+<div class="min-h-screen bg-blue-50 flex flex-col items-center justify-center py-10 space-y-8 px-4">
+  <!-- Green Card Section for Heading -->
+  <div class="w-full bg-green-600 text-white p-6 rounded-b-lg mb-6">
+    <h1 class="text-3xl font-bold text-center">Shower Statistics</h1>
+  </div>
 
   <!-- Today's Shower Time -->
   <div class="bg-white shadow-md rounded-lg p-6 w-full max-w-md mb-6">

@@ -30,9 +30,6 @@
 </script>
 
 <div class="min-h-screen bg-blue-50 flex flex-col items-center justify-center py-10">
-    <!-- Page Header -->
-    <h1 class="text-3xl font-bold text-green-600 mb-6">Log Water Usage</h1>
-  
     <!-- Date Selector -->
     <div class="flex items-center mb-6 space-x-4">
       <!-- Back Arrow Button -->

@@ -6,6 +6,20 @@
     let isRunning = false; // To track if the timer is running
     let dayTotalTime = 0; // To track total time for the day
 
+    // List of funny sink usage quotes
+    const quotes = [
+        "A clean sink is a sign of a dirty mind.",
+        "I came, I saw, I washed my hands.",
+        "Sink or swim? I choose sink.",
+        "When in doubt, wash your hands.",
+        "Life is short. Enjoy the sink while it lasts.",
+        "Sink time is me time.",
+        "Why do they call it a sink when it's more of a 'think'?"
+    ];
+
+    // Pick a random quote
+    let currentQuote = quotes[Math.floor(Math.random() * quotes.length)];
+
     // Load saved time data from localStorage if available
     onMount(() => {
         const savedTime = localStorage.getItem('sinkTime');
@@ -36,26 +50,17 @@
         isRunning = false;
     };
 
-    // End the timer and record the total time for the day
-    const endUsage = () => {
+    // Reset the timer and water height
+    const resetTimer = () => {
         clearInterval(timer);
         isRunning = false;
-        dayTotalTime += elapsedTime; // Add the elapsed time to the day's total
-        localStorage.setItem('dayTotalTime', dayTotalTime); // Save to localStorage
-
-        // Reset the timer for the next session
         elapsedTime = 0;
-        localStorage.setItem('sinkTime', elapsedTime); // Reset saved time
+        localStorage.setItem('sinkTime', elapsedTime); // Save reset time to localStorage
     };
 
-    // Submit the total time for the day (could be displayed or saved in localStorage)
-    const submitDayTotal = () => {
-        alert(`Total time for today: ${formatTime(dayTotalTime)}`);
-        // Reset for a new day
-        localStorage.removeItem('sinkTime');
-        localStorage.removeItem('dayTotalTime');
-        dayTotalTime = 0;
-        elapsedTime = 0;
+    // Go back to the waterlog page
+    const goBack = () => {
+        window.history.back(); // Go back to the previous page in the history
     };
 
     // Format seconds into HH:MM:SS
@@ -65,61 +70,136 @@
         return `${minutes < 10 ? "0" : ""}${minutes}:${secondsLeft < 10 ? "0" : ""}${secondsLeft}`;
     };
 
-    // Go back to the waterlog page
-    const goBack = () => {
-        window.history.back(); // Go back to the previous page in the history
-    };
+    // Dynamically calculate water height
+    $: waterHeight = Math.min((elapsedTime / 300) * 100, 100); // Max 100% for 5 minutes of elapsed time
 
     onDestroy(() => {
         clearInterval(timer); // Clean up the interval when the component is destroyed
     });
 </script>
 
-<div class="min-h-screen bg-blue-50 flex flex-col items-center justify-center py-10 space-y-6">
-    <h1 class="text-3xl font-bold text-green-600 mb-4">Sink Timer</h1>
+<div class="app-container">
+    <!-- Main Content -->
+    <div class="min-h-screen flex flex-col items-center justify-center py-10 space-y-8 px-4">
+        <!-- Green Card Section for Heading -->
+        <div class="w-full bg-green-600 text-white p-6 rounded-b-lg mb-4">
+            <h1 class="text-3xl font-bold text-white-600 text-center">Sink Timer</h1>
+        </div>
 
-    <!-- Timer Display -->
-    <div class="text-4xl font-bold text-green-600 mb-6">
-        {formatTime(elapsedTime)}
-    </div>
+        <!-- Timer Display -->
+        <div class="text-4xl font-bold text-black-600 mb-6">
+            {formatTime(elapsedTime)}
+        </div>
 
-    <!-- Start, Pause, and End Buttons -->
-    <div class="space-x-4 flex mb-6">
-        {#if !isRunning}
-            <button on:click={startTimer} class="bg-green-500 text-white py-3 px-4 rounded-lg shadow-md hover:bg-green-600 focus:outline-none">
-                Start Timer
+        <!-- Funny Sink Quote -->
+        <div class="text-lg text-center text-gray-600 mb-6 italic">
+            {currentQuote}
+        </div>
+
+        <!-- Start, Pause Buttons -->
+        <div class="space-x-4 flex mb-6">
+            {#if !isRunning}
+                <button on:click={startTimer} class="bg-green-500 text-white py-3 px-4 rounded-lg shadow-md hover:bg-green-600 focus:outline-none">
+                    Start Timer
+                </button>
+            {:else}
+                <button on:click={pauseTimer} class="bg-yellow-500 text-white py-3 px-4 rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none">
+                    Pause Timer
+                </button>
+            {/if}
+        </div>
+
+        <!-- Reset Button -->
+        <div class="space-x-4 flex mb-6">
+            <button on:click={resetTimer} class="bg-gray-500 text-white py-3 px-6 rounded-lg shadow-md hover:bg-gray-600 focus:outline-none">
+                Reset Timer
             </button>
-        {:else}
-            <button on:click={pauseTimer} class="bg-yellow-500 text-white py-3 px-4 rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none">
-                Pause Timer
+        </div>
+
+        <!-- Back Button -->
+        <div class="space-x-4 flex mb-6">
+            <button on:click={goBack} class="bg-red-500 text-white py-3 px-6 rounded-lg shadow-md hover:bg-red-600 focus:outline-none">
+                Back to Waterlog
             </button>
-        {/if}
-
-        <button on:click={endUsage} class="bg-red-500 text-white py-3 px-4 rounded-lg shadow-md hover:bg-red-600 focus:outline-none">
-            End Usage
-        </button>
+        </div>
     </div>
 
-    <!-- Submit and Back Buttons in a Horizontal Layout -->
-    <div class="flex space-x-4 mb-6">
-        <button on:click={submitDayTotal} class="bg-blue-500 text-white py-3 px-4 rounded-lg shadow-md hover:bg-blue-600 focus:outline-none">
-            Submit Total Time
-        </button>
-
-        <button on:click={goBack} class="bg-gray-500 text-white py-3 px-6 rounded-lg shadow-md hover:bg-gray-600 focus:outline-none">
-            Back to Waterlog
-        </button>
-    </div>
-
-    <!-- Sink Beaver Image -->
-    <div class="mt-6 mb-6 flex justify-center">
-        <img src="/sinkbeaver.svg" alt="Sink Beaver" class="w-64 h-auto object-contain" />
+    <!-- Realistic Flowing Water Background -->
+    <div class="water-background" style="height: {waterHeight}%; transition: height 1s ease-out;">
+        <div class="water-wave wave1"></div>
+        <div class="water-wave wave2"></div>
+        <div class="water-wave wave3"></div>
     </div>
 </div>
 
 <style>
-    /* Styling for the timer and buttons */
+    :root {
+        --water-height: 0%;
+    }
+
+    .app-container {
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Water Background */
+    .water-background {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        overflow: hidden;
+        z-index: -1; /* Behind the main content */
+        background: rgba(0, 180, 216, 0.7);
+        border-radius: 20% 20% 0 0;
+    }
+
+    /* Waves inside the water */
+    .water-wave {
+        position: absolute;
+        bottom: 0;
+        width: 200%;
+        height: 20px;
+        background: rgba(0, 180, 216, 0.5);
+        opacity: 0.6;
+        border-radius: 50%;
+        transform: scaleX(1.5);
+    }
+
+    .wave1 {
+        animation: wave-animation 5s infinite linear;
+        z-index: 2;
+    }
+
+    .wave2 {
+        animation: wave-animation 6s infinite linear reverse;
+        background: rgba(0, 150, 199, 0.5);
+        z-index: 3;
+    }
+
+    .wave3 {
+        animation: wave-animation 7s infinite linear;
+        background: rgba(0, 100, 150, 0.4);
+        z-index: 1;
+    }
+
+    /* Wave Animation */
+    @keyframes wave-animation {
+        0% {
+            transform: translateX(0);
+        }
+        100% {
+            transform: translateX(-50%);
+        }
+    }
+
+    /* Styling for Buttons */
     button {
-        transition: background-color 0.3s ease;
+        padding: 12px 24px; /* Consistent padding */
+        font-size: 1rem; /* Consistent font size */
+        width: 160px; /* Set the same width for all buttons */
+        text-align: center; /* Center text in buttons */
+        border-radius: 0.375rem; /* Consistent border radius */
+        transition: background-color 0.3s ease; /* Smooth transition */
     }
 </style>
