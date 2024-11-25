@@ -7,7 +7,7 @@
       const day = String(date.getDate()).padStart(2, '0'); // Ensures 2-digit day
       const month = String(date.getMonth() + 1).padStart(2, '0'); // Ensures 2-digit month (months are 0-indexed)
       const year = date.getFullYear();
-      return `${day} ${month} ${year}`;
+      return `${day} - ${month} - ${year}`;
     };
     
     // Move the date backward
@@ -30,9 +30,6 @@
 </script>
 
 <div class="min-h-screen bg-blue-50 flex flex-col items-center justify-center py-10">
-    <!-- Page Header -->
-    <h1 class="text-3xl font-bold text-green-600 mb-6">Log Water Usage</h1>
-  
     <!-- Date Selector -->
     <div class="flex items-center mb-6 space-x-4">
       <!-- Back Arrow Button -->
@@ -129,3 +126,6 @@
       background-color: rgba(0, 0, 0, 0.3);
     }
 </style>
+
+<!-- fixed the naming -->
+
