@@ -77,26 +77,30 @@
     });
 </script>
 
-<div class="min-h-screen bg-blue-50 flex flex-col items-center justify-center py-10 space-y-8 px-4">
-    <!-- Green Card Section for Heading -->
+<div class="min-h-screen bg-blue-50 flex flex-col px-0 mx-0 relative">
+    <!-- Back Button (Positioned at top left) -->
+    <button on:click={goBack} class="absolute top-4 left-4 bg-red-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-600 focus:outline-none">
+        Back
+    </button>
+
+    <!-- Green Card Section for Heading (Full Width, no padding or margin) -->
     <div class="w-full bg-green-600 text-white p-6 rounded-b-lg">
         <h1 class="text-3xl font-bold mb-4 text-center">Flush Count</h1>
     </div>
 
-    <!-- Flush Animation (using toilet.gif) -->
-    {#if showFlushAnimation}
-        <div class="flush-animation">
-            <img src="/toilet.gif" alt="Toilet flush animation" class="w-48 h-48 object-cover">
-        </div>
-    {/if}
+    <!-- Content Below Green Card (Centered in the remaining screen space) -->
+    <div class="flex flex-col items-center justify-center flex-grow space-y-8">
+        <!-- Flush Animation (using toilet.gif) -->
+        {#if showFlushAnimation}
+            <div class="flush-animation">
+                <img src="/toilet.gif" alt="Toilet flush animation" class="w-48 h-48 object-cover">
+            </div>
+        {/if}
 
-    <!-- Funny Quote Display -->
-    <div class="flex flex-col items-center space-y-4">
+        <!-- Funny Quote Display -->
         <div class="text-center text-lg italic">{funnyQuote}</div>
-    </div>
 
-    <!-- Flush Counter -->
-    <div class="flex flex-col items-center space-y-4">
+        <!-- Flush Counter -->
         <div class="flex items-center space-x-6 text-2xl font-bold">
             <button on:click={decrementFlush} class="bg-gray-500 text-white py-2 px-4 rounded-full shadow-md hover:bg-gray-600 focus:outline-none">
                 &#8592; <!-- Left arrow -->
@@ -106,13 +110,6 @@
                 &#8594; <!-- Right arrow -->
             </button>
         </div>
-    </div>
-
-    <!-- Back Button -->
-    <div class="flex flex-col space-y-4 items-center">
-        <button on:click={goBack} class="bg-red-500 text-white py-3 px-6 rounded-lg shadow-md hover:bg-red-600 focus:outline-none">
-            Back to Waterlog
-        </button>
     </div>
 </div>
 

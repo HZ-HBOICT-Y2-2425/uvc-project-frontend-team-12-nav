@@ -13,19 +13,27 @@
   const bottlesForYesterday = Array(yesterdayWaterUsage).fill(1);
 </script>
 
-<div class="min-h-screen bg-blue-50 flex flex-col items-center justify-center py-10 space-y-8 px-4">
+<div class="min-h-screen bg-blue-50 flex flex-col items-center relative">
+  <!-- Back Button -->
+  <button 
+    on:click={() => window.history.back()} 
+    class="absolute top-4 left-4 bg-red-500 text-white py-2 px-3 rounded-lg shadow-md hover:bg-red-600 focus:outline-none"
+  >
+    Back
+  </button>
+
   <!-- Green Card Section for Heading -->
-  <div class="w-full bg-green-600 text-white p-6 rounded-b-lg mb-6">
+  <div class="w-full bg-green-600 text-white p-6 rounded-b-lg">
     <h1 class="text-3xl font-bold text-center">Shower Statistics</h1>
   </div>
 
   <!-- Today's Shower Time -->
-  <div class="bg-white shadow-md rounded-lg p-6 w-full max-w-md mb-6">
+  <div class="bg-white shadow-md rounded-lg p-6 w-full max-w-md mt-6">
     <h2 class="text-2xl font-bold text-green-600">Today's Shower Time</h2>
     <p class="text-xl mt-2">{todayShowerTime} minutes</p>
     <p class="text-lg text-gray-600">{todayWaterUsage} liters of water used</p>
     <!-- Bottles Visualization -->
-    <div class="flex flex-wrap mt-4 gap-2">
+    <div class="flex flex-wrap justify-center gap-2">
       {#each bottlesForToday as _}
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -41,12 +49,12 @@
   </div>
 
   <!-- Yesterday's Shower Time -->
-  <div class="bg-white shadow-md rounded-lg p-6 w-full max-w-md">
+  <div class="bg-white shadow-md rounded-lg p-6 w-full max-w-md mt-6">
     <h2 class="text-2xl font-bold text-green-600">Yesterday's Shower Time</h2>
     <p class="text-xl mt-2">{yesterdayShowerTime} minutes</p>
     <p class="text-lg text-gray-600">{yesterdayWaterUsage} liters of water used</p>
     <!-- Bottles Visualization -->
-    <div class="flex flex-wrap mt-4 gap-2">
+    <div class="flex flex-wrap justify-center gap-2">
       {#each bottlesForYesterday as _}
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -60,11 +68,6 @@
       {/each}
     </div>
   </div>
-
-  <!-- Back Button -->
-  <button on:click={() => window.history.back()} class="mt-6 bg-red-500 text-white py-3 px-4 rounded-lg shadow-md hover:bg-red-600 focus:outline-none">
-    Back
-  </button>
 </div>
 
 <style>
@@ -81,5 +84,16 @@
   }
   .h-16 {
     height: 4rem;
+  }
+  /* Ensuring the bottle container doesn't use the full screen width */
+  .flex {
+    display: flex;
+    justify-content: center;
+  }
+  .max-w-md {
+    max-width: 80%;
+  }
+  .justify-center {
+    justify-content: center;
   }
 </style>
