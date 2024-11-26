@@ -47,6 +47,7 @@
           class="bg-green-500 text-white p-3 rounded-full hover:bg-green-600 focus:outline-none"
       >
           &#8592;
+
       </button>
       <!-- Display Current Date -->
       <span class="text-xl font-bold">{formatDate(currentDate)}</span>

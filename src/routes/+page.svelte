@@ -2,10 +2,11 @@
     import "../app.css";
 </script>
 
-<h1 class="bg-lime-400">Welcome to SvelteKit</h1>
+<h1 class="bg-lime-400">Welcome to Beaverwize</h1>
 <p>
     Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the
     documentation
+    <a href="/signup">Sign Up</a>
 </p>
 
-<p>xd</p>
+<p>xd</p>fioensfefioejsfoes

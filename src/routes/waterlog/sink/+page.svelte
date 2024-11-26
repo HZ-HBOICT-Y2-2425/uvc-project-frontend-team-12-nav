@@ -57,7 +57,6 @@
         elapsedTime = 0;
         localStorage.setItem('sinkTime', elapsedTime); // Save reset time to localStorage
     };
-
     // Go back to the previous page (Back button functionality)
     const goBack = () => {
         localStorage.removeItem('sinkTime');
@@ -135,7 +134,6 @@
     :root {
         --water-height: 0%;
     }
-
     /* Full screen layout */
     .min-h-screen {
         min-height: 100vh;
