@@ -1,34 +1,38 @@
 <!-- src/routes/profile/+page.svelte -->
 <script lang="ts">
-    import { onMount } from 'svelte';
-    import { fade, slide } from 'svelte/transition';
-    import { goto } from '$app/navigation';
-    
-    let username = "Ivan Iliev";
-    let mounted = false;
+  import { onMount } from 'svelte';
+  import { fade, slide } from 'svelte/transition';
+  import { goto } from '$app/navigation';
+  import NavigationButton from '$lib/components/ui/NavigationButton.svelte';
+  import Header from '$lib/components/layout/Header.svelte';
+  import PageContainer from '$lib/components/layout/PageContainer.svelte';
   
-    onMount(() => {
-      mounted = true;
-    });
+  let username = "Ivan Iliev";
+  let mounted = false;
 
-    // Navigation functions
-    function goBack() {
-      goto('/');
-    }
+  onMount(() => {
+    mounted = true;
+  });
 
-    function navigateToRewards() {
-      goto('/rewards');
-    }
+  const icons = {
+    rewards: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>`,
+    statistics: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+    </svg>`,
+    achievements: `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+    </svg>`
+  };
 
-    function navigateToStatistics() {
-      goto('/statistics');
-    }
-
-    function navigateToAchievements() {
-      goto('/achievements');
-    }
+  const navigationButtons = [
+    { label: 'Redeem rewards', icon: icons.rewards, action: () => goto('/rewards') },
+    { label: 'Personal Statistics', icon: icons.statistics, action: () => goto('/statistics') },
+    { label: 'Achievements', icon: icons.achievements, action: () => goto('/achievements') }
+  ];
 </script>
-  
+
 <div class="min-h-screen bg-white relative overflow-hidden">
     <!-- Curved line decoration at the top -->
     <div class="absolute top-0 left-0 right-0">
@@ -46,7 +50,7 @@
     <div class="absolute top-4 left-4 z-10">
       <button 
         class="px-4 py-2 bg-red-500 text-white rounded-lg shadow-lg hover:bg-red-600 transition-colors"
-        on:click={goBack}
+        on:click={() => goto('/')}
       >
         Back
       </button>
@@ -72,35 +76,13 @@
   
         <!-- Action Buttons -->
         <div class="space-y-4 max-w-sm mx-auto" in:slide={{ delay: 600 }}>
-          <button 
-            class="w-full py-4 bg-green-500 text-white text-xl rounded-xl shadow-lg hover:bg-green-600 transition-colors flex items-center justify-center gap-2"
-            on:click={navigateToRewards}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            Redeem rewards
-          </button>
-  
-          <button 
-            class="w-full py-4 bg-green-500 text-white text-xl rounded-xl shadow-lg hover:bg-green-600 transition-colors flex items-center justify-center gap-2"
-            on:click={navigateToStatistics}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-            </svg>
-            Personal Statistics
-          </button>
-  
-          <button 
-            class="w-full py-4 bg-green-500 text-white text-xl rounded-xl shadow-lg hover:bg-green-600 transition-colors flex items-center justify-center gap-2"
-            on:click={navigateToAchievements}
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-            </svg>
-            Achievements
-          </button>
+          {#each navigationButtons as { label, icon, action }}
+            <NavigationButton
+              {label}
+              {icon}
+              on:click={action}
+            />
+          {/each}
         </div>
       </div>
   
