@@ -96,9 +96,3 @@ jobs:
         uses: github/codeql-action/analyze@v3
         with:
           output: ../results
-      # Step 4: Upload CodeQL Results (Optional)
-      - name: Upload CodeQL Results
-        uses: actions/upload-artifact@v3
-        with:
-          name: codeql-results
-          path: ../results

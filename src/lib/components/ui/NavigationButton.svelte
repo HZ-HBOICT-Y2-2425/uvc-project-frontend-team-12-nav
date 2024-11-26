@@ -10,7 +10,7 @@
     on:click
   >
     {#if icon}
-      {icon}
+      {@html icon}
     {/if}
     {label}
   </button>
