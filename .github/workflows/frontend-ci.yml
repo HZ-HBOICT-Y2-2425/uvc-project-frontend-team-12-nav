@@ -4,9 +4,12 @@ on:
   push:
     branches:
       - main
+      - develop # Include additional branches if necessary
   pull_request:
     branches:
       - main
+      - develop
+      - pipeline
 
 jobs:
   build-and-test:
@@ -17,29 +20,50 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step 2: Set up Node.js
+      # Step 2: Cache dependencies
+      - name: Cache Node Modules
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      # Step 3: Set up Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 22.7.0
+          cache: "npm"
 
-      # Step 3: Install dependencies
+      # Step 4: Install dependencies
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
-      # Step 4: Lint the code
+      # Step 5: Lint the code
       - name: Lint code
         run: npm run lint
 
-      # Step 5: Run unit tests
+      # Step 6: Run unit tests
       - name: Run tests
-        run: npm test
+        env:
+          CI: true
+        run: npm test -- --coverage
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: coverage/
 
-      # Step 6: Build the project
+      # Step 7: Perform static code analysis
+      - name: Static Code Analysis
+        uses: github/codeql-action/analyze@v2
+
+      # Step 8: Build the project
       - name: Build frontend
         run: npm run build
 
-      # Step 7: Upload build artifacts (optional)
+      # Step 9: Upload build artifacts
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v3
         with:
