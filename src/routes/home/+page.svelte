@@ -20,6 +20,7 @@
 
     const increment = Math.random() * 30 + 10;
     currentUsage = Math.min(currentUsage + increment, totalCapacity);
+    navigateToWaterlog();
   }
 
   // Navigation functions
@@ -33,6 +34,10 @@
 
   function navigateToCommunity() {
     goto('/community');
+  }
+
+  function navigateToWaterlog() {
+    goto('/waterlog');
   }
 
   const buttonActions = {
