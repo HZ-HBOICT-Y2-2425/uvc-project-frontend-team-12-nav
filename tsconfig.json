@@ -1,19 +1,52 @@
 {
   "extends": "@tsconfig/svelte/tsconfig.json",
   "compilerOptions": {
-    "types": ["svelte"],
-    "moduleResolution": "node",
+    "paths": {
+      "$lib": ["../src/lib"],
+      "$lib/*": ["../src/lib/*"]
+    },
+    "rootDirs": ["..", "./types"],
+    "verbatimModuleSyntax": true,
     "isolatedModules": true,
-    "esModuleInterop": true,
-    "target": "esnext",
+    "lib": ["esnext", "DOM", "DOM.Iterable"],
+    "moduleResolution": "bundler", // Overriding "node" with "bundler"
     "module": "esnext",
+    "noEmit": true,
+    "target": "esnext",
+    "types": ["svelte"],
+    "esModuleInterop": true,
     "strict": true,
     "allowJs": true,
-    "noEmit": true,
     "resolveJsonModule": true,
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   },
-  "include": ["src/**/*", "src/**/*.svelte"],
-  "exclude": ["node_modules", ".svelte-kit", "public", "build"]
+  "include": [
+    "ambient.d.ts",
+    "non-ambient.d.ts",
+    "./types/**/$types.d.ts",
+    "../vite.config.js",
+    "../vite.config.ts",
+    "../src/**/*.js",
+    "../src/**/*.ts",
+    "../src/**/*.svelte",
+    "../tests/**/*.js",
+    "../tests/**/*.ts",
+    "../tests/**/*.svelte",
+    "src/**/*",
+    "src/**/*.svelte"
+  ],
+  "exclude": [
+    "node_modules",
+    ".svelte-kit",
+    "public",
+    "build",
+    "../node_modules/**",
+    "../src/service-worker.js",
+    "../src/service-worker/**/*.js",
+    "../src/service-worker.ts",
+    "../src/service-worker/**/*.ts",
+    "../src/service-worker.d.ts",
+    "../src/service-worker/**/*.d.ts"
+  ]
 }

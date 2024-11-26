@@ -26,6 +26,10 @@ export default [
     rules: {
       ...sveltePlugin.configs.recommended.rules,
       ...tsPlugin.configs.recommended.rules,
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
+      ],
     },
   },
   // TypeScript configuration
@@ -45,21 +49,14 @@ export default [
     },
     rules: {
       ...tsPlugin.configs.recommended.rules,
-    },
-  },
-  // JavaScript configuration
-  {
-    files: ["**/*.js"],
-    languageOptions: {
-      ecmaVersion: "latest",
-      sourceType: "module",
-    },
-    rules: {
-      // Add or override rules for JavaScript
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
+      ],
     },
   },
   // Ignore patterns
   {
-    ignores: ["node_modules", ".svelte-kit", "public", "build", "dist"],
+    ignores: ["node_modules", ".svelte-kit", "build", "public", "dist"],
   },
 ];
