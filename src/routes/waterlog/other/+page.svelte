@@ -55,51 +55,55 @@
     };
 </script>
 
-<div class="min-h-screen bg-blue-50 flex flex-col items-center justify-center py-10 space-y-8 px-4">
-    <!-- Green Card Section for Heading -->
+<div class="min-h-screen bg-blue-50 flex flex-col items-center justify-center px-0">
+    <!-- Back Button in the Top Left Corner -->
+    <div class="absolute top-4 left-4">
+        <button on:click={goBack} class="bg-red-500 text-white py-3 px-6 rounded-lg shadow-md hover:bg-red-600 focus:outline-none">
+            Back
+        </button>
+    </div>
+
+    <!-- Green Card Section for Heading (Full width without padding) -->
     <div class="w-full bg-green-600 text-white p-6 rounded-b-lg">
-        <h1 class="text-3xl font-bold mb-4 text-center">Other Water Usage</h1>
+        <h1 class="text-3xl font-bold mb-4 text-center">Other Usage</h1>
     </div>
 
-    <!-- Dropdown for selecting a category -->
-    <div class="w-full flex flex-col items-center">
-        <label for="categories" class="text-xl font-bold text-gray-700 mb-2">Select a Category:</label>
-        <select id="categories" bind:value={selectedCategory} on:change={selectCategory} class="p-2 border rounded-lg w-full max-w-xs">
-            <option value="" disabled selected>Select a category</option>
-            {#each categories as category}
-                <option value={category}>{category}</option>
-            {/each}
-        </select>
-    </div>
+    <!-- Content Below the Green Card (Centered Vertically and Horizontally) -->
+    <div class="flex-grow flex flex-col items-center justify-center text-center space-y-8">
+        <!-- Dropdown for selecting a category -->
+        <div class="w-full flex flex-col items-center">
+            <label for="categories" class="text-xl font-bold text-gray-700 mb-2">Select a Category:</label>
+            <select id="categories" bind:value={selectedCategory} on:change={selectCategory} class="p-2 border rounded-lg w-full max-w-xs">
+                <option value="" disabled selected>Select a category</option>
+                {#each categories as category}
+                    <option value={category}>{category}</option>
+                {/each}
+            </select>
+        </div>
 
-    {#if selectedCategory}
-        <!-- Counter controls for the selected category -->
-        <div class="w-full flex flex-col items-center space-y-6 max-w-md">
-            <h2 class="text-2xl font-bold text-black-600 text-center">
-                How many times have you used water on {selectedCategory}
-            </h2>
-            <div class="flex items-center justify-center space-x-6 text-2xl font-bold text-black-600">
-                <button on:click={decrementCount} class="bg-gray-500 text-white py-2 px-4 rounded-full shadow-md hover:bg-gray-600 focus:outline-none">
-                    &#8592; <!-- Left arrow -->
-                </button>
-                <div class="w-12 text-center">{currentCount}</div>
-                <button on:click={incrementCount} class="bg-green-500 text-white py-2 px-4 rounded-full shadow-md hover:bg-green-600 focus:outline-none">
-                    &#8594; <!-- Right arrow -->
+        {#if selectedCategory}
+            <!-- Counter controls for the selected category -->
+            <div class="w-full flex flex-col items-center space-y-6 max-w-md">
+                <h2 class="text-2xl font-bold text-black-600 text-center">
+                    How many times have you used water on {selectedCategory}
+                </h2>
+                <div class="flex items-center justify-center space-x-6 text-2xl font-bold text-black-600">
+                    <button on:click={decrementCount} class="bg-gray-500 text-white py-2 px-4 rounded-full shadow-md hover:bg-gray-600 focus:outline-none">
+                        &#8592; <!-- Left arrow -->
+                    </button>
+                    <div class="w-12 text-center">{currentCount}</div>
+                    <button on:click={incrementCount} class="bg-green-500 text-white py-2 px-4 rounded-full shadow-md hover:bg-green-600 focus:outline-none">
+                        &#8594; <!-- Right arrow -->
+                    </button>
+                </div>
+
+                <!-- Save button -->
+                <button on:click={saveCategoryData} class="bg-green-500 text-white py-3 px-6 rounded-lg shadow-md hover:bg-green-600 focus:outline-none">
+                    Save {selectedCategory} Data
                 </button>
             </div>
-
-            <!-- Save button -->
-            <button on:click={saveCategoryData} class="bg-green-500 text-white py-3 px-6 rounded-lg shadow-md hover:bg-green-600 focus:outline-none">
-                Save {selectedCategory} Data
-            </button>
-        </div>
-    {/if}
-
-    <!-- Back button -->
-    <button on:click={goBack} class="bg-red-500 text-white py-3 px-6 rounded-lg shadow-md hover:bg-red-600 focus:outline-none">
-        Back to Waterlog
-    </button>
-
+        {/if}
+    </div>
 </div>
 
 <style>
@@ -117,7 +121,7 @@
     }
 
     .min-h-screen {
-        padding-left: 16px;
-        padding-right: 16px;
+        padding-left: 0;
+        padding-right: 0;
     }
 </style>

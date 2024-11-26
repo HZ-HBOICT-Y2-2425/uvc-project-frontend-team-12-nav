@@ -81,12 +81,15 @@
           <h2 class="text-lg font-bold mb-4">Select an Item for {selectedSlot}</h2>
           <ul>
             {#each inventory.filter((item) => item.type === selectedSlot) as item}
-              <li
-                class="border-b py-2 cursor-pointer hover:bg-gray-100"
+            <li class="border-b py-2 cursor-pointer hover:bg-gray-100">
+              <button
+                type="button"
+                class="w-full text-left"
                 on:click={() => equipItem(selectedSlot, item)}
               >
                 {item.name}
-              </li>
+              </button>
+            </li>
             {/each}
           </ul>
           <button
