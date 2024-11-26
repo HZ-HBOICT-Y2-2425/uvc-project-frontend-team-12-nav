@@ -58,9 +58,11 @@
         localStorage.setItem('sinkTime', elapsedTime); // Save reset time to localStorage
     };
 
-    // Go back to the waterlog page
+    // Go back to the previous page (Back button functionality)
     const goBack = () => {
-        window.history.back(); // Go back to the previous page in the history
+        localStorage.removeItem('sinkTime');
+        localStorage.removeItem('dayTotalTime');
+        window.history.back(); // Navigate back to the previous page
     };
 
     // Format seconds into HH:MM:SS
@@ -78,14 +80,15 @@
     });
 </script>
 
-<div class="app-container">
-    <!-- Main Content -->
-    <div class="min-h-screen flex flex-col items-center justify-center py-10 space-y-8 px-4">
-        <!-- Green Card Section for Heading -->
-        <div class="w-full bg-green-600 text-white p-6 rounded-b-lg mb-4">
-            <h1 class="text-3xl font-bold text-white-600 text-center">Sink Timer</h1>
-        </div>
+<!-- Full Screen Green Card -->
+<div class="min-h-screen flex flex-col relative">
+    <!-- Green Card Section for Heading -->
+    <div class="w-full bg-green-600 text-white p-6 rounded-b-lg mb-0">
+        <h1 class="text-3xl font-bold text-center">Sink Timer</h1>
+    </div>
 
+    <!-- Timer and other content section -->
+    <div class="flex flex-col items-center justify-center py-10 space-y-6 flex-1">
         <!-- Timer Display -->
         <div class="text-4xl font-bold text-black-600 mb-6">
             {formatTime(elapsedTime)}
@@ -97,29 +100,25 @@
         </div>
 
         <!-- Start, Pause Buttons -->
-        <div class="space-x-4 flex mb-6">
+        <div class="flex flex-col items-center mb-6">
             {#if !isRunning}
-                <button on:click={startTimer} class="bg-green-500 text-white py-3 px-4 rounded-lg shadow-md hover:bg-green-600 focus:outline-none">
+                <button on:click={startTimer} class="bg-green-500 text-white py-3 px-4 rounded-lg shadow-md hover:bg-green-600 focus:outline-none mb-4">
                     Start Timer
                 </button>
             {:else}
-                <button on:click={pauseTimer} class="bg-yellow-500 text-white py-3 px-4 rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none">
+                <button on:click={pauseTimer} class="bg-yellow-500 text-white py-3 px-4 rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none mb-4">
                     Pause Timer
                 </button>
             {/if}
-        </div>
 
-        <!-- Reset Button -->
-        <div class="space-x-4 flex mb-6">
-            <button on:click={resetTimer} class="bg-gray-500 text-white py-3 px-6 rounded-lg shadow-md hover:bg-gray-600 focus:outline-none">
+            <!-- Reset Button -->
+            <button on:click={resetTimer} class="bg-gray-500 text-white py-3 px-6 rounded-lg shadow-md hover:bg-gray-600 focus:outline-none mb-4">
                 Reset Timer
             </button>
-        </div>
 
-        <!-- Back Button -->
-        <div class="space-x-4 flex mb-6">
+            <!-- Back Button -->
             <button on:click={goBack} class="bg-red-500 text-white py-3 px-6 rounded-lg shadow-md hover:bg-red-600 focus:outline-none">
-                Back to Waterlog
+                End Usage
             </button>
         </div>
     </div>
@@ -137,9 +136,9 @@
         --water-height: 0%;
     }
 
-    .app-container {
-        position: relative;
-        overflow: hidden;
+    /* Full screen layout */
+    .min-h-screen {
+        min-height: 100vh;
     }
 
     /* Water Background */

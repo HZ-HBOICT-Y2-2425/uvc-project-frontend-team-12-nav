@@ -77,44 +77,45 @@
     });
 </script>
 
-<div class="min-h-screen bg-blue-50 flex flex-col items-center justify-center py-10 space-y-8 px-4 relative overflow-hidden">
-    <!-- Green Card Section for Heading -->
+<div class="min-h-screen bg-blue-50 flex flex-col items-center px-0 mx-0 relative overflow-hidden">
+    <!-- Back Button in the Top Left Corner -->
+    <div class="absolute top-4 left-4">
+        <button on:click={goBack} class="bg-red-500 text-white py-3 px-6 rounded-lg shadow-md hover:bg-red-600 focus:outline-none">
+            Back
+        </button>
+    </div>
+
+    <!-- Green Card Section for Heading (Full Width, no padding or margin) -->
     <div class="w-full bg-green-600 text-white p-6 rounded-b-lg">
-        <h1 class="text-3xl font-bold text-white-600 mb-4 text-center">Wash Count</h1>
+        <h1 class="text-3xl font-bold mb-4 text-center">Wash Count</h1>
     </div>
 
-    <!-- Laundry Animation -->
-    {#if showLaundryAnimation}
-        <div class="laundry-animation">
-            <img src="/laundry.gif" alt="Laundry animation" class="w-48 h-48 object-cover">
-        </div>
-    {/if}
+    <!-- Content Below the Green Card (Centered Vertically and Horizontally) -->
+    <div class="flex-grow flex flex-col items-center justify-center text-center space-y-8">
+        <!-- Laundry Animation -->
+        {#if showLaundryAnimation}
+            <div class="laundry-animation">
+                <img src="/laundry.gif" alt="Laundry animation" class="w-48 h-48 object-cover">
+            </div>
+        {/if}
 
-    <!-- Funny Washing Machine Quote Display -->
-    <div class="text-center space-y-4">
+        <!-- Funny Washing Machine Quote Display -->
         <div class="text-lg italic">{funnyQuote}</div>
-    </div>
 
-    <!-- Wash Counter -->
-    <div class="space-y-8 mb-8">
-        <div class="flex flex-col items-center space-y-4">
-            <div class="flex items-center space-x-6 text-2xl font-bold text-black-600">
-                <button on:click={decrementWash} class="bg-gray-500 text-white py-2 px-4 rounded-full shadow-md hover:bg-gray-600 focus:outline-none">
-                    &#8592; <!-- Left arrow -->
-                </button>
-                <div>{washCount}</div>
-                <button on:click={incrementWash} class="bg-green-500 text-white py-2 px-4 rounded-full shadow-md hover:bg-green-600 focus:outline-none">
-                    &#8594; <!-- Right arrow -->
-                </button>
+        <!-- Wash Counter -->
+        <div class="space-y-8 mb-8">
+            <div class="flex flex-col items-center space-y-4">
+                <div class="flex items-center space-x-6 text-2xl font-bold text-black-600">
+                    <button on:click={decrementWash} class="bg-gray-500 text-white py-2 px-4 rounded-full shadow-md hover:bg-gray-600 focus:outline-none">
+                        &#8592; <!-- Left arrow -->
+                    </button>
+                    <div>{washCount}</div>
+                    <button on:click={incrementWash} class="bg-green-500 text-white py-2 px-4 rounded-full shadow-md hover:bg-green-600 focus:outline-none">
+                        &#8594; <!-- Right arrow -->
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
-
-    <!-- Back Button -->
-    <div>
-        <button on:click={goBack} class="bg-red-500 text-white py-3 px-6 rounded-lg shadow-md hover:bg-red-600 focus:outline-none">
-            Back to Waterlog
-        </button>
     </div>
 </div>
 
