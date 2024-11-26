@@ -1,49 +1,65 @@
-// eslint.config.js
-import globals from "globals";
-import js from "@eslint/js";
 import sveltePlugin from "eslint-plugin-svelte";
 import svelteParser from "svelte-eslint-parser";
+import tsParser from "@typescript-eslint/parser";
+import tsPlugin from "@typescript-eslint/eslint-plugin";
 
 /** @type {import('eslint').Linter.FlatConfig[]} */
 export default [
-  // Ignore Patterns
-  {
-    ignores: [
-      "**/node_modules/**",
-      "**/.svelte-kit/**",
-      "**/dist/**",
-      "**/build/**",
-      "**/coverage/**",
-    ],
-  },
-
-  // JavaScript Configuration
-  {
-    files: ["**/*.js"],
-    languageOptions: {
-      globals: globals.browser,
-      ecmaVersion: "latest",
-      sourceType: "module",
-    },
-    rules: {
-      ...js.configs.recommended.rules,
-    },
-  },
-
-  // Svelte Configuration
+  // Svelte configuration
   {
     files: ["**/*.svelte"],
     languageOptions: {
       parser: svelteParser,
-      ecmaVersion: "latest",
-      sourceType: "module",
+      parserOptions: {
+        parser: tsParser,
+        project: "./tsconfig.json",
+        extraFileExtensions: [".svelte"],
+        tsconfigRootDir: process.cwd(),
+        ecmaVersion: "latest",
+        sourceType: "module",
+      },
     },
     plugins: {
       svelte: sveltePlugin,
+      "@typescript-eslint": tsPlugin,
     },
-    processor: sveltePlugin.processors.svelte,
     rules: {
       ...sveltePlugin.configs.recommended.rules,
+      ...tsPlugin.configs.recommended.rules,
     },
+  },
+  // TypeScript configuration
+  {
+    files: ["**/*.ts"],
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        project: "./tsconfig.json",
+        tsconfigRootDir: process.cwd(),
+        ecmaVersion: "latest",
+        sourceType: "module",
+      },
+    },
+    plugins: {
+      "@typescript-eslint": tsPlugin,
+    },
+    rules: {
+      ...tsPlugin.configs.recommended.rules,
+    },
+  },
+  // JavaScript configuration
+  {
+    files: ["**/*.js"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+    },
+    rules: {
+      // Add or override rules for JavaScript
+    },
+  },
+  // Ignore patterns
+  {
+    ignores: ["node_modules", ".svelte-kit", "public", "build", "dist"],
   },
 ];
