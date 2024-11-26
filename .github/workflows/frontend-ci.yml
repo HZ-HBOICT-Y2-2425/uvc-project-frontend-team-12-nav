@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout code
+      # Step 1: Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -21,7 +21,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 22.7.0
 
       # Step 3: Install dependencies
       - name: Install dependencies
@@ -31,17 +31,17 @@ jobs:
       - name: Lint code
         run: npm run lint
 
-      # Step 5: Run type-checking
-      - name: Type-check
-        run: npm run check
+      # Step 5: Run unit tests
+      - name: Run tests
+        run: npm test
 
       # Step 6: Build the project
       - name: Build frontend
         run: npm run build
 
-      # Optional: Upload build artifacts
+      # Step 7: Upload build artifacts (optional)
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: frontend-build
-          path: dist/
+          name: build
+          path: build/
