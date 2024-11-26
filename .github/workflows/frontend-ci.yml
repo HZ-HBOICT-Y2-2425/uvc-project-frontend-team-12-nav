@@ -1,18 +1,24 @@
-name: Frontend CI Pipeline
+name: Frontend CI/CD and CodeQL Analysis
 
 on:
   push:
     branches:
       - main
-      - develop # Include additional branches if necessary
+      - develop
+      - pipeline
   pull_request:
     branches:
       - main
       - develop
       - pipeline
 
+permissions:
+  security-events: write
+  actions: read
+
 jobs:
   build-and-test:
+    name: Build and Test Frontend
     runs-on: ubuntu-latest
 
     steps:
@@ -49,15 +55,13 @@ jobs:
         env:
           CI: true
         run: npm test -- --coverage
+
+      # Step 7: Upload test coverage report
       - name: Upload Coverage Report
         uses: actions/upload-artifact@v3
         with:
           name: coverage-report
           path: coverage/
-
-      # Step 7: Perform static code analysis
-      - name: Static Code Analysis
-        uses: github/codeql-action/analyze@v2
 
       # Step 8: Build the project
       - name: Build frontend
@@ -69,3 +73,26 @@ jobs:
         with:
           name: build
           path: build/
+
+  codeql-analysis:
+    name: CodeQL Analysis
+    needs: build-and-test # Ensure build and test steps complete first
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Step 2: Initialize CodeQL
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: 'javascript'
+          config-file: codeql-config.yml
+
+      # Step 3: Perform CodeQL Analysis
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+        with:
+          output: ../results
