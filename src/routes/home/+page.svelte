@@ -5,7 +5,7 @@
   import PageContainer from '$lib/components/layout/PageContainer.svelte';
   import WaterTank from '$lib/components/ui/WaterTank.svelte';
   import NavigationButton from '$lib/components/ui/NavigationButton.svelte';
-
+  
   const totalCapacity = 1125;
   let currentUsage = 450;
   const weeklySaving = 40;
@@ -16,7 +16,6 @@
     { label: 'Community', action: () => goto('/community') }
   ];
 </script>
-
 <PageContainer>
   <Header title="Home" />
   
