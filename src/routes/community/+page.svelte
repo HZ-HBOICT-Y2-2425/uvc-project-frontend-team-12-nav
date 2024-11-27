@@ -4,15 +4,24 @@
   class ProgressTracker {
     private progress: number;
     private goal: number;
-    private progressCircle: SVGCircleElement | null;
     private progressText: HTMLElement | null;
+    private waterWave: HTMLElement | null;
+    private progressCircle: SVGCircleElement | null;
 
-    constructor(circleId: string, textId: string, initialProgress: number, goal: number) {
+    constructor(
+      textId: string,
+      waveId: string,
+      circleId: string,
+      initialProgress: number,
+      goal: number
+    ) {
       this.progress = initialProgress;
       this.goal = goal;
-      this.progressCircle = document.getElementById(circleId) as unknown as SVGCircleElement;
-      this.progressText = document.getElementById(textId);
+      this.progressText = document.getElementById(textId) as HTMLElement | null;
+      this.waterWave = document.getElementById(waveId) as HTMLElement | null;
+      this.progressCircle = document.getElementById(circleId) as SVGCircleElement | null;
       this.updateUI();
+      this.startWaveMovement();
     }
 
     updateProgress(value: number): void {
@@ -21,31 +30,58 @@
     }
 
     private updateUI(): void {
+      const percentage = (this.progress / this.goal) * 100;
+
+      // Update water level vertically based on progress
+      if (this.waterWave) {
+        const heightPercentage = percentage; // Water height increases with progress
+        this.waterWave.style.height = `${heightPercentage}%`; // Adjust the height of the water wave
+      }
+
+      // Update circular progress bar (stroke animation)
       if (this.progressCircle) {
         const radius = this.progressCircle.r.baseVal.value;
         const circumference = 2 * Math.PI * radius;
-        const offset = circumference - (this.progress / this.goal) * circumference;
+        const offset = circumference - (percentage / 100) * circumference;
         this.progressCircle.style.strokeDasharray = `${circumference} ${circumference}`;
         this.progressCircle.style.strokeDashoffset = `${offset}`;
       }
+
+      // Update progress text
       if (this.progressText) {
         this.progressText.innerText = `${this.progress} / ${this.goal}`;
+      }
+    }
+
+    // Function to start random horizontal wave movement
+    private startWaveMovement(): void {
+      if (this.waterWave) {
+        let position = 0; // Track the wave's position
+
+        setInterval(() => {
+          // Randomize wave movement by adjusting the horizontal position of the entire wave
+          position += Math.random() * 4 - 2; // Random change between -2px and 2px
+          position = position % 10; // Reset the position when it exceeds 10px to keep it in a cycle
+          if (this.waterWave) {
+            this.waterWave.style.transform = `translateY(${position}px)`; // Move horizontally
+          }
+        }, 100); // Change the wave position every 100ms
       }
     }
   }
 
   let tracker: ProgressTracker | null = null;
-  let sliderValue = 2000; // Initialize the slider's value
-
+  let sliderValue = 2000;
   const goal = 20000;
 
-  // Initialize tracker when the component is mounted
   onMount(() => {
-    const slider = document.querySelector('input[type="range"]') as HTMLInputElement;
-    if (slider) {
-      sliderValue = Number(slider.value);
-    }
-    tracker = new ProgressTracker('progressCircle', 'progressText', sliderValue, goal);
+    tracker = new ProgressTracker(
+      'progressText',
+      'waterWave',
+      'progressCircle',
+      sliderValue,
+      goal
+    );
   });
 
   const handleInput = (event: Event): void => {
@@ -65,9 +101,15 @@
     width: 150px;
     height: 150px;
   }
+
   .progress-svg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2; /* Above the water */
     transform: rotate(-90deg);
   }
+
   .progress-text {
     position: absolute;
     top: 50%;
@@ -76,22 +118,41 @@
     font-size: 1rem;
     font-weight: bold;
     color: #000;
+    z-index: 3; /* Above everything */
+  }
+
+  .water-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    clip-path: circle(50% at 50% 50%);
+    overflow: hidden;
+    z-index: 1; /* Below the text and circle */
+  }
+
+  .water-wave {
+    width: 100%;
+    height: 0%;
+    position: absolute;
+    bottom: 0; /* Start from the bottom of the circle */
+    background: #1677ff;
+    opacity: 0.7;
+    transition: height 0.3s ease-out, transform 0.2s ease-out; /* Smooth transform for wave movement */
   }
 </style>
 
 <main class="flex flex-col items-center justify-between min-h-screen bg-gray-100">
   <!-- Header Section -->
-  <!-- Needs work as name needs to be picked from somewhere else --> 
   <header class="w-full py-4 bg-beaver-100 shadow-md text-center text-white font-bold text-lg">
     Your Community
   </header>
 
-
-
   <!-- Progress Section -->
   <section class="flex flex-col items-center justify-center w-full max-w-md p-6 bg-white rounded-lg shadow-md">
     <div class="progress-container">
-      <!-- Circular Progress Bar -->
+      <!-- Circular Progress Outline -->
       <svg class="progress-svg" width="150" height="150">
         <circle
           cx="75"
@@ -113,7 +174,14 @@
           style="stroke-dasharray: 440; stroke-dashoffset: 440; transition: stroke-dashoffset 0.3s;"
         ></circle>
       </svg>
-      <div id="progressText" class="progress-text text-center"> Community Goal <br> 0 / 20000 Liters</div>
+
+      <!-- Moving Water -->
+      <div class="water-container">
+        <div id="waterWave" class="water-wave"></div>
+      </div>
+
+      <!-- Progress Text -->
+      <div id="progressText" class="progress-text text-center">Community Goal <br /> 0 / 20000 Liters</div>
     </div>
 
     <!-- Input Slider -->
@@ -128,7 +196,7 @@
   </section>
 
   <section class="w-full py-4 bg-beaver-100 shadow-md text-center text-white font-bold text-lg">
-    Save 20.000 Liters with you community.
+    Save 20.000 Liters with your community.
   </section>
 
   <!-- Footer Section -->
