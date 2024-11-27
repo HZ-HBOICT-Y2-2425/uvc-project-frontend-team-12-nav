@@ -37,7 +37,7 @@
 
 <PageContainer>
   <!-- Header -->
-  <Header title="Outfit" showBack={true} />
+  <Header title="Outfit" showBack={true} backRoute="/inventory"/>
 
   <!-- Beaver Placeholder -->
   <section class="flex flex-col items-center mt-4">

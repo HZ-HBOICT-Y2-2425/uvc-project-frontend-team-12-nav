@@ -27,7 +27,7 @@
 
 <PageContainer>
   <!-- Header -->
-  <Header title="Inventory" showBack={true}/>
+  <Header title="Inventory" showBack={true} backRoute="/home"/>
 
   <!-- Inventory List -->
   <ul class="w-full">
