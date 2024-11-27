@@ -1,51 +1,62 @@
-import sveltePlugin from 'eslint-plugin-svelte';
-import svelteParser from 'svelte-eslint-parser';
-import typescriptParser from '@typescript-eslint/parser';
-import typescriptPlugin from '@typescript-eslint/eslint-plugin';
+import sveltePlugin from "eslint-plugin-svelte";
+import svelteParser from "svelte-eslint-parser";
+import tsParser from "@typescript-eslint/parser";
+import tsPlugin from "@typescript-eslint/eslint-plugin";
 
 /** @type {import('eslint').Linter.FlatConfig[]} */
 export default [
+  // Svelte configuration
   {
-    files: ['**/*.svelte'],
+    files: ["**/*.svelte"],
     languageOptions: {
       parser: svelteParser,
       parserOptions: {
-        parser: typescriptParser,
-        project: './tsconfig.json',
-        extraFileExtensions: ['.svelte'],
+        parser: tsParser,
+        project: "./tsconfig.json",
+        extraFileExtensions: [".svelte"],
         tsconfigRootDir: process.cwd(),
-        ecmaVersion: 'latest',
-        sourceType: 'module',
+        ecmaVersion: "latest",
+        sourceType: "module",
       },
     },
     plugins: {
       svelte: sveltePlugin,
-      '@typescript-eslint': typescriptPlugin,
+      "@typescript-eslint": tsPlugin,
     },
     rules: {
       ...sveltePlugin.configs.recommended.rules,
-      ...typescriptPlugin.configs.recommended.rules,
+      ...tsPlugin.configs.recommended.rules,
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
+      ],
     },
   },
+  // TypeScript configuration
   {
-    files: ['**/*.ts'],
+    files: ["**/*.ts"],
     languageOptions: {
-      parser: typescriptParser,
+      parser: tsParser,
       parserOptions: {
-        project: './tsconfig.json',
+        project: "./tsconfig.json",
         tsconfigRootDir: process.cwd(),
-        ecmaVersion: 'latest',
-        sourceType: 'module',
+        ecmaVersion: "latest",
+        sourceType: "module",
       },
     },
     plugins: {
-      '@typescript-eslint': typescriptPlugin,
+      "@typescript-eslint": tsPlugin,
     },
     rules: {
-      ...typescriptPlugin.configs.recommended.rules,
+      ...tsPlugin.configs.recommended.rules,
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
+      ],
     },
   },
+  // Ignore patterns
   {
-    ignores: ['node_modules', '.svelte-kit', 'build', 'public', 'dist'],
+    ignores: ["node_modules", ".svelte-kit", "build", "public", "dist"],
   },
 ];
