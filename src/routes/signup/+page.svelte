@@ -15,17 +15,40 @@
   let postalCode = '';
   let password = '';
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     // Collect form data
     const userData = {
-      name,
+      username: name,      // Assuming your backend expects 'username'
       email,
       postalCode,
       password,
     };
 
+    try {
+      // Send a POST request to the backend
+      const response = await fetch('http://localhost:3000/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Signup successful
+        alert('Signup successful! You can now log in.');
+        window.location.href = '/login';
+      } else {
+        // Handle errors (e.g., display error message)
+        alert(result.msg || 'Signup failed');
+      }
+    } catch (error) {
+      console.error('Error during signup:', error);
+      alert('An error occurred during signup.');
+    }
+  };
     // Process userData here if needed
 
     // Redirect to /questionnaire after sign-up

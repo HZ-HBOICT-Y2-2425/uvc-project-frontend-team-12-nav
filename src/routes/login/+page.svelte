@@ -5,13 +5,43 @@
 
   let showPassword = false;
 
+  // Variables to store form input values
+  let email = '';
+  let password = '';
+
   const togglePasswordVisibility = () => {
     showPassword = !showPassword;
   };
 
-  const handleLogin = (event) => {
+  const handleLogin = async (event) => {
     event.preventDefault();
-    // Add login logic here
+
+    // Collect form data
+    const loginData = { email, password };
+
+    try {
+      // Send a POST request to the backend
+      const response = await fetch('http://localhost:3000/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(loginData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Login successful
+        // Store the token and redirect as needed
+        localStorage.setItem('token', result.token);
+        window.location.href = '/dashboard'; // Replace with your protected route
+      } else {
+        // Handle errors (e.g., display error message)
+        alert(result.msg || 'Login failed');
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+      alert('An error occurred during login.');
+    }
   };
 
   // Animation for the logo
@@ -57,6 +87,7 @@
       placeholder="Enter Your Email"
       required
       class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
+      bind:value={email}
     />
     <div class="relative">
       <input
@@ -64,6 +95,7 @@
         placeholder="Enter Your Password"
         required
         class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
+        bind:value={password}
       />
       <button
         type="button"

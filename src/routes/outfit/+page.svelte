@@ -7,7 +7,7 @@
       { id: 4, name: "Loro Piana loafers", type: "Shoes" },
       { id: 5, name: "Dior handbag", type: "Accessory" },
     ];
-  
+
     let outfit = {
       Head: null,
       Shirt: null,
@@ -15,23 +15,23 @@
       Shoes: null,
       Accessory: null,
     };
-  
+
     let selectedSlot = null; // Track which slot is being edited
     let showModal = false; // Track modal visibility
-  
+
     // Equip an item to a slot
     function equipItem(slot, item) {
       outfit[slot] = item; // Update the outfit
       showModal = false; // Close modal
     }
-  
+
     // Open the modal for a specific slot
     function openModal(slot) {
       selectedSlot = slot;
       showModal = true;
     }
   </script>
-  
+
   <style>
     .mascot {
       width: 150px;
@@ -42,19 +42,19 @@
       position: relative;
     }
   </style>
-  
+
   <div class="min-h-screen flex flex-col items-center">
     <!-- Header -->
     <div class="bg-green-100 w-full text-center pb-4">
       <h1 class="text-3xl font-bold mt-6">Clothing</h1>
     </div>
-  
+
     <!-- Beaver Placeholder -->
     <div class="mascot mt-4">
       <!-- Placeholder for Beaver image -->
       <p class="text-center text-gray-600 pt-16">BEAVER</p>
     </div>
-  
+
     <!-- Equip Slots as a List -->
     <div class="w-full max-w-md mt-8">
       <ul>
@@ -71,7 +71,7 @@
         {/each}
       </ul>
     </div>
-  
+
     <!-- Modal for Selecting Items -->
     {#if showModal}
       <div
@@ -102,4 +102,3 @@
       </div>
     {/if}
   </div>
-  
