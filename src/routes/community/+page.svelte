@@ -2,7 +2,7 @@
 
   let progress = 0;
   let goal = 20000;
-  let communityName = 'HZ Community';
+  // let communityName = 'HZ Community';
 
   function updateProgress(event: Event) {
     // Simulate progress update based on user interaction (e.g., clicking a button)
