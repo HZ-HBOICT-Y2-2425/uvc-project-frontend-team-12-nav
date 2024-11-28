@@ -6,7 +6,7 @@
   import NavigationButton from '$lib/components/ui/NavigationButton.svelte';
   import Header from '$lib/components/layout/Header.svelte';
   import PageContainer from '$lib/components/layout/PageContainer.svelte';
-  
+
   let username = "Ivan Iliev";
   let mounted = false;
 
