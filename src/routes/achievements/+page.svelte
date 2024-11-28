@@ -2,8 +2,6 @@
     import Header from "$lib/components/layout/Header.svelte";
     import AchievementsList from "$lib/components/achievements/AchievementsList.svelte";
     import PageContainer from "$lib/components/layout/PageContainer.svelte";
-
-    import { goto } from "$app/navigation";
 </script>
 
 <PageContainer>
