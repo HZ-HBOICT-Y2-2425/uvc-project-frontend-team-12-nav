@@ -145,9 +145,9 @@
 
 <main class="flex flex-col items-center justify-between min-h-screen bg-gray-100">
   <!-- Header Section -->
-  <header class="w-full py-4 bg-beaver-100 shadow-md text-center text-white font-bold text-lg">
+   <a href='./home'class="w-full py-4 bg-beaver-100 shadow-md text-center text-white font-bold text-lg">
     Your Community
-  </header>
+  </a>
 
   <!-- Progress Section -->
   <section class="flex flex-col items-center justify-center w-full max-w-md p-6 bg-white rounded-lg shadow-md">
@@ -202,18 +202,18 @@
   <!-- Footer Section -->
   <footer class="w-full bg-beaver-100 py-4 shadow-inner">
     <div class="flex justify-evenly items-center">
-      <button class="flex flex-col items-center text-sm text-black">
+      <a href="./leave" class="flex flex-col items-center text-sm text-black">
         <div class="w-6 h-6 bg-gray-400 rounded-full mb-1"></div>
         Leave
-      </button>
-      <button class="flex flex-col items-center text-sm text-black">
+      </a>
+      <a href="./members" class="flex flex-col items-center text-sm text-black">
         <div class="w-6 h-6 bg-gray-400 rounded-full mb-1"></div>
         Members
-      </button>
-      <button class="flex flex-col items-center text-sm text-black">
+      </a>
+      <a href="./invite" class="flex flex-col items-center text-sm text-black">
         <div class="w-6 h-6 bg-gray-400 rounded-full mb-1"></div>
         Invite
-      </button>
+      </a>
     </div>
   </footer>
 </main>
