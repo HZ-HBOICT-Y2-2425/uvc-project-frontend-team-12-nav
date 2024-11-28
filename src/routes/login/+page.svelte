@@ -2,10 +2,9 @@
   import { fade, fly, scale } from 'svelte/transition';
   import { tweened } from 'svelte/motion';
   import { cubicOut } from 'svelte/easing';
+  import { goto } from '$app/navigation';
 
   let showPassword = false;
-
-  // Variables to store form input values
   let email = '';
   let password = '';
 
@@ -16,12 +15,10 @@
   const handleLogin = async (event) => {
     event.preventDefault();
 
-    // Collect form data
     const loginData = { email, password };
 
     try {
-      // Send a POST request to the backend
-      const response = await fetch('http://localhost:3000/auth/login', {
+      const response = await fetch('http://localhost:3012/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(loginData),
@@ -30,13 +27,11 @@
       const result = await response.json();
 
       if (response.ok) {
-        // Login successful
-        // Store the token and redirect as needed
-        localStorage.setItem('token', result.token);
-        window.location.href = '/dashboard'; // Replace with your protected route
+        // Optionally store token if provided
+        // localStorage.setItem('token', result.token);
+        goto('/home'); // Redirect to dashboard
       } else {
-        // Handle errors (e.g., display error message)
-        alert(result.msg || 'Login failed');
+        alert(result.message || 'Login failed');
       }
     } catch (error) {
       console.error('Error during login:', error);

@@ -2,33 +2,30 @@
   import { fade, fly, scale } from 'svelte/transition';
   import { tweened } from 'svelte/motion';
   import { cubicOut } from 'svelte/easing';
+  import { goto } from '$app/navigation';
 
   let showPassword = false;
-
-  const togglePasswordVisibility = () => {
-    showPassword = !showPassword;
-  };
-
-  // Variables to store form input values
   let name = '';
   let email = '';
   let postalCode = '';
   let password = '';
 
+  const togglePasswordVisibility = () => {
+    showPassword = !showPassword;
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Collect form data
     const userData = {
-      username: name,      // Assuming your backend expects 'username'
+      name,
       email,
       postalCode,
       password,
     };
 
     try {
-      // Send a POST request to the backend
-      const response = await fetch('http://localhost:3000/auth/signup', {
+      const response = await fetch('http://localhost:3012/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(userData),
@@ -37,22 +34,14 @@
       const result = await response.json();
 
       if (response.ok) {
-        // Signup successful
-        alert('Signup successful! You can now log in.');
-        window.location.href = '/login';
+        goto('/questionnaire');
       } else {
-        // Handle errors (e.g., display error message)
-        alert(result.msg || 'Signup failed');
+        alert(result.message || 'Signup failed');
       }
     } catch (error) {
       console.error('Error during signup:', error);
       alert('An error occurred during signup.');
     }
-  };
-    // Process userData here if needed
-
-    // Redirect to /questionnaire after sign-up
-    window.location.href = '/questionnaire';
   };
 
   // Animation for the logo
