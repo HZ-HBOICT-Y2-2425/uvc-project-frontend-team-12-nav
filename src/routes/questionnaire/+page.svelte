@@ -1,7 +1,7 @@
 <script>
   import { fade, fly, scale } from 'svelte/transition';
-  import { tweened } from 'svelte/motion';
-  import { cubicOut } from 'svelte/easing';
+  // import { tweened } from 'svelte/motion';
+  // import { cubicOut } from 'svelte/easing';
 
   let showerTimes = "";
   let showerDuration = "";
