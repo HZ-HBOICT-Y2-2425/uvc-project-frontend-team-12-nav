@@ -104,14 +104,4 @@
     margin: 0 10;
     position: relative;
   }
-
-  /* Global modal styles */
-  .modal {
-    position: fixed;
-    inset: 0;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
 </style>
