@@ -48,7 +48,6 @@
       console.error('Error during signup:', error);
       alert('An error occurred during signup.');
     }
-  };
     // Process userData here if needed
 
     // Redirect to /questionnaire after sign-up
