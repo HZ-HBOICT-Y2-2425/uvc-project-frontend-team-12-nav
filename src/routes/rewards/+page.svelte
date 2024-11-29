@@ -58,12 +58,6 @@
   </div>
   
   <style>
-    /* Ensure body has no margin or padding */
-    body {
-      margin: 0;
-      padding: 0;
-    }
-  
     .redeem-page {
       display: flex;
       flex-direction: column;
