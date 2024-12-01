@@ -4,7 +4,7 @@
   export let title: string;
   export let showBack: boolean = false;
   export let color: 'green' | 'white' = 'green';
-  export let backRoute: string = '/'; // New property
+  export let backRoute: string = '/';
   
   function goBack() {
     if (backRoute.startsWith('/')) {
