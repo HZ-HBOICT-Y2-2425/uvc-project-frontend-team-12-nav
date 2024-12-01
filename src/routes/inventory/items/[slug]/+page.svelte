@@ -4,6 +4,7 @@
   import Header from "$lib/components/layout/Header.svelte";
   import PageContainer from "$lib/components/layout/PageContainer.svelte";
   import { get } from "svelte/store";
+  import { goto } from "$app/navigation";
 
   let slug;
   let item;
@@ -53,6 +54,7 @@
       <div class="w-full flex justify-center">
         <button
           class="bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-700 w-full max-w-md"
+          on:click={() => goto("/rewards")}
         >
           Go to the redeem shop
         </button>
