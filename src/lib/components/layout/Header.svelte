@@ -28,16 +28,6 @@
       {/if}
       
       <div class="flex items-center gap-2">
-          <svg xmlns="http://www.w3.org/2000/svg" 
-               class="h-6 w-6 {color === 'green' ? 'text-white' : 'text-gray-800'}" 
-               fill="none"
-               viewBox="0 0 24 24" 
-               stroke="currentColor">
-              <path stroke-linecap="round" 
-                    stroke-linejoin="round" 
-                    stroke-width="2"
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0z" />
-          </svg>
           <h1 class="text-3xl font-normal {color === 'green' ? 'text-white' : 'text-gray-800'}">{title}</h1>
       </div>
   </div>
