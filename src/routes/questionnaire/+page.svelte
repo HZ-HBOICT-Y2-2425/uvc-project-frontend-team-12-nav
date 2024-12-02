@@ -1,7 +1,8 @@
 <script>
   import { fade, fly, scale } from 'svelte/transition';
-  import { tweened } from 'svelte/motion';
-  import { cubicOut } from 'svelte/easing';
+  import { goto } from '$app/navigation';
+  // import { tweened } from 'svelte/motion';
+  // import { cubicOut } from 'svelte/easing';
 
   let showerTimes = "";
   let showerDuration = "";
@@ -197,7 +198,7 @@
     </div>
 
     <div class="flex justify-center space-x-4" in:fade={{ delay: 800 }}>
-      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg" transition:scale={{ duration: 100 }}>Submit</button>
+      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-lg" transition:scale={{ duration: 100 }} on:click={()=>goto("/home")}>Submit</button>
       <button type="button" class="bg-gray-500 text-white px-4 py-2 rounded-lg" transition:scale={{ duration: 100 }}>Cancel</button>
     </div>
   </form>

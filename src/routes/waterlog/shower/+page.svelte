@@ -4,7 +4,7 @@
   let remainingTime = showerTime * 60; // Convert to seconds
   let isRunning = false;
   let isPaused = false;
-  let totalShowerTime = 0; // Track total time spent in seconds
+  // let totalShowerTime = 0; // Track total time spent in seconds
 
   // Funny shower quotes
   const showerQuotes = [

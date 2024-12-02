@@ -4,7 +4,7 @@
     let timer;
     let elapsedTime = 0; // Total time spent on the sink (in seconds)
     let isRunning = false; // To track if the timer is running
-    let dayTotalTime = 0; // To track total time for the day
+    // let dayTotalTime = 0; // To track total time for the day
 
     // List of funny sink usage quotes
     const quotes = [

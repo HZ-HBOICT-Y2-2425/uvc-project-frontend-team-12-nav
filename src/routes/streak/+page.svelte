@@ -17,7 +17,7 @@
 
     <!-- Image -->
     <div class="flex justify-center mb-6">
-      <img src="/cute_beaver.svg" alt="Beaver" class="w-40 h-auto">
+      <img src="/beaver.svg" alt="Beaver" class="w-40 h-auto">
     </div>
 
     <!-- Rewards Section -->
