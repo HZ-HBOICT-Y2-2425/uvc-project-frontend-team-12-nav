@@ -3,8 +3,8 @@
   import { fade, slide } from 'svelte/transition';
   import { goto } from '$app/navigation';
   import NavigationButton from '$lib/components/ui/NavigationButton.svelte';
-  import Header from '$lib/components/layout/Header.svelte';
-  import PageContainer from '$lib/components/layout/PageContainer.svelte';
+  // import Header from '$lib/components/layout/Header.svelte';
+  // import PageContainer from '$lib/components/layout/PageContainer.svelte';
   import { CircleDollarSign, BarChart2, Award } from 'lucide-svelte';
   
   let username = "Ivan Iliev";

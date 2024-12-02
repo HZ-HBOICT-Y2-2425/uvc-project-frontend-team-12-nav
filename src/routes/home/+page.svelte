@@ -19,12 +19,14 @@
 <PageContainer>
   <Header title="Home" />
   
-  <div class="w-full max-w-[400px] sm:max-w-[450px] md:max-w-[500px] px-6 flex-1 flex flex-col items-center">
+  <div class="w-full max-w-[400px] sm:max-w-[450px] md:max-w-[500px] px-6 flex-1 flex flex-col items-center on:hover pointer">
+  <button type="button" on:click={() => goto("/waterlog")} aria-label="Go to water log">
     <WaterTank
       {currentUsage}
       {totalCapacity}
       {weeklySaving}
     />
+  </button>
 
     <!-- Action Buttons -->
     <div class="w-full space-y-4 mt-4">
