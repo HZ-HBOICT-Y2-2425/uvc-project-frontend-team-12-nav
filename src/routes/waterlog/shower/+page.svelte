@@ -58,11 +58,42 @@
     isPaused = true;
   };
 
-  const endTimer = () => {
+  const endTimer = async () => {
     clearInterval(timer);
     isRunning = false;
-    totalShowerTime += showerTime * 60 - remainingTime; // Add remaining time to total
+    const timeSpent = showerTime * 60 - remainingTime; // Time spent in seconds
+    totalShowerTime += timeSpent;
     remainingTime = showerTime * 60; // Reset timer
+
+    // Convert timeSpent to minutes
+    const duration = timeSpent / 60;
+
+    // Send POST request to log shower usage
+    try {
+      const response = await fetch('http://localhost:3011/api/water-usage/shower', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId: 1, // Replace with actual userId
+          duration: duration,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log('Shower usage logged:', data);
+        alert('Shower usage logged successfully!');
+      } else {
+        console.error('Error logging shower usage:', data);
+        alert(`Error: ${data.message}`);
+      }
+    } catch (error) {
+      console.error('Network error:', error);
+      alert('Network error occurred while logging shower usage.');
+    }
   };
 </script>
 

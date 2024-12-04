@@ -6,6 +6,9 @@
     let isRunning = false; // To track if the timer is running
     let dayTotalTime = 0; // To track total time for the day
 
+    // Placeholder userId; replace this with actual user authentication logic
+    let userId = '1';
+
     // List of funny sink usage quotes
     const quotes = [
         "A clean sink is a sign of a dirty mind.",
@@ -50,21 +53,45 @@
         isRunning = false;
     };
 
-    // Reset the timer and water height
+    // Reset the timer
     const resetTimer = () => {
         clearInterval(timer);
         isRunning = false;
         elapsedTime = 0;
         localStorage.setItem('sinkTime', elapsedTime); // Save reset time to localStorage
     };
-    // Go back to the previous page (Back button functionality)
-    const goBack = () => {
-        localStorage.removeItem('sinkTime');
-        localStorage.removeItem('dayTotalTime');
-        window.history.back(); // Navigate back to the previous page
+
+    // Function to log sink usage and navigate back
+    const goBack = async () => {
+        try {
+            const durationMinutes = elapsedTime / 60; // Convert seconds to minutes
+            const response = await fetch('http://localhost:3011/api/water-usage/sink', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userId,
+                    duration: durationMinutes,
+                }),
+            });
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error('Error logging sink usage:', errorData);
+                alert('Failed to log sink usage.');
+            } else {
+                console.log('Sink usage logged successfully.');
+                localStorage.removeItem('sinkTime');
+                localStorage.removeItem('dayTotalTime');
+                window.history.back(); // Navigate back to the previous page
+            }
+        } catch (error) {
+            console.error('Error logging sink usage:', error);
+            alert('Failed to log sink usage due to network error.');
+        }
     };
 
-    // Format seconds into HH:MM:SS
+    // Format seconds into MM:SS
     const formatTime = (seconds) => {
         const minutes = Math.floor(seconds / 60);
         const secondsLeft = seconds % 60;
@@ -95,7 +122,7 @@
 
         <!-- Funny Sink Quote -->
         <div class="text-lg text-center text-gray-600 mb-6 italic">
-            {currentQuote}
+            "{currentQuote}"
         </div>
 
         <!-- Start, Pause Buttons -->

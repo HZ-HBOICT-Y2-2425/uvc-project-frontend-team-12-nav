@@ -1,129 +1,191 @@
 <script>
-  let currentDate = new Date();
-  let maxDate = new Date(); // This is today's date
+    import { onMount, onDestroy } from "svelte";
 
-  // Format date to dd mm yyyy
-  const formatDate = (date) => {
-      const day = String(date.getDate()).padStart(2, '0'); // Ensures 2-digit day
-      const month = String(date.getMonth() + 1).padStart(2, '0'); // Ensures 2-digit month (months are 0-indexed)
-      const year = date.getFullYear();
-      return `${day} - ${month} - ${year}`;
-  };
+    let washCount = 0; // Tracks the number of times washing occurred
+    let dayTotalWashes = 0; // Total wash count for the day
+    let funnyQuote = ""; // Holds the selected funny quote
+    let showLaundryAnimation = false; // Controls visibility of the laundry animation
 
-  // Move the date backward
-  const moveDateBack = () => {
-      const newDate = new Date(currentDate);
-      newDate.setDate(newDate.getDate() - 1);
-      if (newDate <= maxDate) {
-          currentDate = newDate;
-      }
-  };
+    // Array of funny washing machine-related quotes
+    const washingQuotes = [
+        "Laundry is the only thing that should be separated by color.",
+        "A load of laundry is just the beginning of a beautiful cycle.",
+        "Wash, rinse, repeat… That’s life!",
+        "Doing laundry is a great way to 'spin' your day.",
+        "There’s no place like home—especially if it’s freshly washed.",
+        "You know it's laundry day when the washer is your best friend.",
+        "If laundry was easy, they’d call it football.",
+        "Your laundry is waiting. Make it clean again."
+    ];
 
-  // Move the date forward
-  const moveDateForward = () => {
-      const newDate = new Date(currentDate);
-      newDate.setDate(newDate.getDate() + 1);
-      if (newDate <= maxDate) {
-          currentDate = newDate;
-      }
-  };
+    // Define userId (Replace this with actual user ID logic if you have authentication)
+    const userId = '1';
+
+    // Load saved counts from localStorage if available (only in the browser)
+    onMount(() => {
+        if (typeof window !== 'undefined') { // Check if we are in the browser
+            const savedWashes = localStorage.getItem('washCount');
+            if (savedWashes) {
+                washCount = parseInt(savedWashes);
+            }
+
+            const savedDayWashes = localStorage.getItem('dayTotalWashes');
+            if (savedDayWashes) {
+                dayTotalWashes = parseInt(savedDayWashes);
+            }
+        }
+
+        // Select a random funny washing machine quote
+        funnyQuote = washingQuotes[Math.floor(Math.random() * washingQuotes.length)];
+    });
+
+    // Increase wash count and trigger animation
+    const incrementWash = async () => {
+        washCount++;
+        triggerLaundryAnimation();
+
+        // Save the updated wash count in localStorage
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('washCount', washCount);
+        }
+
+        // Send POST request to backend API to log the washing usage
+        await sendWashData(1); // Each increment represents 1 load
+    };
+
+    // Decrease wash count
+    const decrementWash = () => {
+        if (washCount > 0) {
+            washCount--;
+
+            // Save the updated wash count in localStorage
+            if (typeof window !== 'undefined') {
+                localStorage.setItem('washCount', washCount);
+            }
+        }
+    };
+
+    // Trigger the laundry animation
+    const triggerLaundryAnimation = () => {
+        showLaundryAnimation = true;
+        setTimeout(() => {
+            showLaundryAnimation = false; // Hide animation after 3 seconds
+        }, 3000); // 3 seconds
+    };
+
+    // Function to send washing data to the backend
+    const sendWashData = async (loads) => {
+        try {
+            const response = await fetch('http://localhost:3011/api/water-usage/washing', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userId,
+                    loads,
+                }),
+            });
+
+            const data = await response.json();
+            if (!response.ok) {
+                console.error('Error logging washing usage:', data.message);
+            } else {
+                console.log('Washing usage logged:', data);
+            }
+        } catch (error) {
+            console.error('Error sending wash data:', error);
+        }
+    };
+
+    // Go back to the waterlog page
+    const goBack = () => {
+        window.history.back(); // Goes back to the previous page in the history
+    };
+
+    onDestroy(() => {
+        // Save daily totals in localStorage before the component is destroyed
+        if (typeof window !== 'undefined') {
+            dayTotalWashes += washCount;
+            localStorage.setItem('dayTotalWashes', dayTotalWashes);
+        }
+    });
 </script>
 
-<div class="min-h-screen bg-blue-50 flex flex-col items-center py-6 relative">
-  <!-- Back Button -->
-  <a href="/" class="absolute top-1 left-1">
-      <button
-          class="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 focus:outline-none flex items-center"
-      >
-          Back
-      </button>
-  </a>
+<div class="min-h-screen bg-blue-50 flex flex-col items-center px-0 mx-0 relative overflow-hidden">
+    <!-- Back Button in the Top Left Corner -->
+    <div class="absolute top-4 left-4">
+        <button on:click={goBack} class="bg-red-500 text-white py-3 px-6 rounded-lg shadow-md hover:bg-red-600 focus:outline-none">
+            Back
+        </button>
+    </div>
 
-  <!-- Date Selector -->
-  <div class="flex items-center space-x-4 mb-8">
-      <!-- Back Arrow Button -->
-      <button
-          on:click={moveDateBack}
-          class="bg-green-500 text-white p-3 rounded-full hover:bg-green-600 focus:outline-none"
-      >
-          &#8592;
+    <!-- Green Card Section for Heading (Full Width, no padding or margin) -->
+    <div class="w-full bg-green-600 text-white p-6 rounded-b-lg">
+        <h1 class="text-3xl font-bold mb-4 text-center">Wash Count</h1>
+    </div>
 
-      </button>
-      <!-- Display Current Date -->
-      <span class="text-xl font-bold">{formatDate(currentDate)}</span>
-      <!-- Forward Arrow Button -->
-      <button
-          on:click={moveDateForward}
-          class="bg-green-500 text-white p-3 rounded-full hover:bg-green-600 focus:outline-none"
-      >
-          &#8594;
-      </button>
-  </div>
+    <!-- Content Below the Green Card (Centered Vertically and Horizontally) -->
+    <div class="flex-grow flex flex-col items-center justify-center text-center space-y-8">
+        <!-- Laundry Animation -->
+        {#if showLaundryAnimation}
+            <div class="laundry-animation">
+                <img src="/laundry.gif" alt="Laundry animation" class="w-48 h-48 object-cover">
+            </div>
+        {/if}
 
-  <!-- Buttons -->
-  <div class="flex flex-col w-full max-w-lg grow space-y-6 px-4">
-      <!-- Shower Button -->
-      <a href="/waterlog/shower" class="w-full">
-          <button
-              class="w-full bg-green-500 text-white py-8 rounded-lg shadow-md hover:bg-green-600 focus:outline-none flex justify-between items-center px-6"
-          >
-              <span class="text-xl font-bold">Shower</span>
-              <img src="/shower.svg" alt="Shower" class="w-16 h-16" />
-          </button>
-      </a>
+        <!-- Funny Washing Machine Quote Display -->
+        <div class="text-lg italic">"{funnyQuote}"</div>
 
-      <!-- Sink Button -->
-      <a href="/waterlog/sink" class="w-full">
-          <button
-              class="w-full bg-green-500 text-white py-8 rounded-lg shadow-md hover:bg-green-600 focus:outline-none flex justify-between items-center px-6"
-          >
-              <span class="text-xl font-bold">Sink</span>
-              <img src="/sink.svg" alt="Sink" class="w-16 h-16" />
-          </button>
-      </a>
-
-      <!-- Washing Button -->
-      <a href="/waterlog/washing" class="w-full">
-          <button
-              class="w-full bg-green-500 text-white py-8 rounded-lg shadow-md hover:bg-green-600 focus:outline-none flex justify-between items-center px-6"
-          >
-              <span class="text-xl font-bold">Washing</span>
-              <img src="/washing.svg" alt="Washing" class="w-16 h-16" />
-          </button>
-      </a>
-
-      <!-- Toilet Button -->
-      <a href="/waterlog/toilet" class="w-full">
-          <button
-              class="w-full bg-green-500 text-white py-8 rounded-lg shadow-md hover:bg-green-600 focus:outline-none flex justify-between items-center px-6"
-          >
-              <span class="text-xl font-bold">Toilet</span>
-              <img src="/toilet.svg" alt="Toilet" class="w-16 h-16" />
-          </button>
-      </a>
-
-      <!-- Other Button -->
-      <a href="/waterlog/other" class="w-full">
-          <button
-              class="w-full bg-green-500 text-white py-8 rounded-lg shadow-md hover:bg-green-600 focus:outline-none flex justify-between items-center px-6"
-          >
-              <span class="text-xl font-bold">Other</span>
-              <img src="/other.svg" alt="Other" class="w-16 h-16" />
-          </button>
-      </a>
-  </div>
+        <!-- Wash Counter -->
+        <div class="space-y-8 mb-8">
+            <div class="flex flex-col items-center space-y-4">
+                <div class="flex items-center space-x-6 text-2xl font-bold text-black-600">
+                    <button on:click={decrementWash} class="bg-gray-500 text-white py-2 px-4 rounded-full shadow-md hover:bg-gray-600 focus:outline-none">
+                        &#8592; <!-- Left arrow -->
+                    </button>
+                    <div>{washCount}</div>
+                    <button on:click={incrementWash} class="bg-green-500 text-white py-2 px-4 rounded-full shadow-md hover:bg-green-600 focus:outline-none">
+                        &#8594; <!-- Right arrow -->
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <style>
-  img {
-      object-fit: contain; /* Ensure images don't stretch */
-  }
+    .laundry-animation {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: #ffe6cc;
+        padding: 2rem;
+        border-radius: 1rem;
+        box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
+        animation: fadeInOut 3s ease-in-out;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-  .text-xl {
-      font-size: 1.25rem;
-  }
-
-  .grow {
-      flex-grow: 1;
-  }
+    @keyframes fadeInOut {
+        0% {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.8);
+        }
+        10% {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        90% {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+        100% {
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.8);
+        }
+    }
 </style>

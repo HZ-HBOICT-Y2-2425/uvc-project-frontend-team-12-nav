@@ -1,16 +1,47 @@
 <script>
-  // Mock Data: Replace with actual data from the backend in a real app
-  let todayShowerTime = 1; // in minutes
-  let yesterdayShowerTime = 7; // in minutes
+  import { onMount } from 'svelte';
 
-  // Calculate water usage (e.g., 10 liters per minute)
-  const litersPerMinute = 10;
-  const todayWaterUsage = todayShowerTime * litersPerMinute;
-  const yesterdayWaterUsage = yesterdayShowerTime * litersPerMinute;
+  let todayShowerTime = 0; // in minutes
+  let yesterdayShowerTime = 0; // in minutes
 
-  // Calculate number of bottles (1 bottle = 1 liter)
-  const bottlesForToday = Array(todayWaterUsage).fill(1);
-  const bottlesForYesterday = Array(yesterdayWaterUsage).fill(1);
+  let todayWaterUsage = 0; // in liters
+  let yesterdayWaterUsage = 0; // in liters
+
+  let bottlesForToday = [];
+  let bottlesForYesterday = [];
+
+  const fetchShowerStats = async () => {
+    try {
+      const response = await fetch('http://localhost:3011/api/water-usage/shower/stats?userId=1');
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log('Shower stats:', data);
+
+        // Assuming the data contains waterUsageToday and waterUsageYesterday in liters
+        todayWaterUsage = data.waterUsageToday;
+        yesterdayWaterUsage = data.waterUsageYesterday;
+
+        // Since water usage per minute is 9 liters
+        todayShowerTime = (todayWaterUsage / 9).toFixed(2); // in minutes
+        yesterdayShowerTime = (yesterdayWaterUsage / 9).toFixed(2); // in minutes
+
+        // Calculate number of bottles (assuming 1 bottle = 1 liter)
+        bottlesForToday = Array(Math.round(todayWaterUsage)).fill(1);
+        bottlesForYesterday = Array(Math.round(yesterdayWaterUsage)).fill(1);
+      } else {
+        console.error('Error fetching shower stats:', data);
+        alert(`Error: ${data.message}`);
+      }
+    } catch (error) {
+      console.error('Network error:', error);
+      alert('Network error occurred while fetching shower statistics.');
+    }
+  };
+
+  onMount(() => {
+    fetchShowerStats();
+  });
 </script>
 
 <div class="min-h-screen bg-blue-50 flex flex-col items-center relative">
