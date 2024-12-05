@@ -34,7 +34,7 @@
 
   async function fetchInventory() {
     try {
-      const response = await fetch('http://localhost:3011/api/outfits');
+      const response = await fetch('http://localhost:3013/outfits');
       if (!response.ok) throw new Error('Failed to fetch inventory');
       inventory = await response.json();
       loading = false;
