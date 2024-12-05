@@ -44,7 +44,7 @@
   });
 </script>
 
-<div class="min-h-screen bg-blue-50 flex flex-col items-center relative">
+<div class="bg-blue-50 flex flex-col items-center relative">
   <!-- Back Button -->
   <button 
     on:click={() => window.history.back()} 

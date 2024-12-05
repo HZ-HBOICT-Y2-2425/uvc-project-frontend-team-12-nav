@@ -108,6 +108,14 @@
 
 <!-- Full Screen Green Card -->
 <div class="min-h-screen flex flex-col relative">
+    <!-- Red Back Button in Top-Left Corner -->
+    <button 
+        on:click={() => window.history.back()} 
+        class="absolute top-4 left-4 bg-red-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-600 focus:outline-none"
+        aria-label="Go Back"
+    >
+        Back
+    </button>
     <!-- Green Card Section for Heading -->
     <div class="w-full bg-green-600 text-white p-6 rounded-b-lg mb-0">
         <h1 class="text-3xl font-bold text-center">Sink Timer</h1>
