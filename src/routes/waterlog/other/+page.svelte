@@ -215,7 +215,7 @@
     <div class="flex-grow flex flex-col items-center justify-center text-center space-y-8 w-full max-w-md">
         <!-- Dropdown for selecting a category -->
         <div class="w-full flex flex-col items-center">
-            <label for="categories" class="text-xl font-bold text-gray-700 mb-2">Select a Category:</label>
+            <label for="categories" class="text-xl font-bold text-gray-700 mb-2">Let's Add More Of Your Water Usages!</label>
             <div class="relative w-full">
                 <select
                     id="categories"
@@ -240,7 +240,7 @@
             <!-- Counter controls for Cooking and Cleaning categories -->
             <div class="w-full flex flex-col items-center space-y-6">
                 <h2 class="text-2xl font-bold text-gray-800">
-                    {selectedCategory} Usage
+                    {selectedCategory} Usages, Don't Use Too Much Water!
                 </h2>
                 <div class="flex items-center justify-center space-x-4 text-2xl font-bold text-gray-800">
                     <button on:click={decrementCount} class="bg-gray-300 text-white py-2 px-4 rounded-full shadow-md hover:bg-gray-400 focus:outline-none transition duration-300">
@@ -265,7 +265,7 @@
             <!-- Timer controls for Gardening category -->
             <div class="w-full flex flex-col items-center space-y-6">
                 <h2 class="text-2xl font-bold text-gray-800">
-                    Gardening Timer
+                    Let's Start Watering The Garden!
                 </h2>
                 <!-- Clock Encapsulated in a White Card -->
                 <div class="bg-white p-4 rounded-lg shadow-md">
@@ -296,7 +296,7 @@
             <!-- Input for Drinking category -->
             <div class="w-full flex flex-col items-center space-y-6">
                 <h2 class="text-2xl font-bold text-gray-800">
-                    Drinking Water Intake
+                    How Much Water Did You Drink Today?
                 </h2>
                 <div class="flex items-center space-x-4">
                     <input 
