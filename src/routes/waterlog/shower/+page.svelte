@@ -9,18 +9,22 @@
   let totalShowerTime = 0; // Track total time spent in seconds
   let hasPlayedAlarm = false; // Flag to ensure alarm plays only once
 
-  // Initialize the alarm audio with the local path
-  const alarm = new Audio('/alarm.mp3');
-  alarm.preload = 'auto';
-  alarm.volume = 0.7; // Adjust volume as needed
+  let alarm; // Declare alarm variable without initializing
 
-  // Event listeners for debugging
-  alarm.addEventListener('canplaythrough', () => {
-    console.log('Alarm audio is ready to play.');
-  });
+  onMount(() => {
+    // Initialize the alarm audio with the local path
+    alarm = new Audio('/alarm.mp3'); // Adjust the path if placed in a subdirectory
+    alarm.preload = 'auto';
+    alarm.volume = 0.7; // Adjust volume as needed
 
-  alarm.addEventListener('error', (e) => {
-    console.error('Error loading alarm audio:', e);
+    // Event listeners for debugging
+    alarm.addEventListener('canplaythrough', () => {
+      console.log('Alarm audio is ready to play.');
+    });
+
+    alarm.addEventListener('error', (e) => {
+      console.error('Error loading alarm audio:', e);
+    });
   });
 
   // Funny shower quotes
@@ -67,7 +71,7 @@
         console.log(`Remaining Time: ${remainingTime} seconds`);
 
         // Check if remainingTime is exactly 60 seconds and alarm hasn't played yet
-        if (remainingTime === 60 && !hasPlayedAlarm) {
+        if (remainingTime === 60 && !hasPlayedAlarm && alarm) {
           alarm.play().then(() => {
             console.log('Alarm played successfully.');
           }).catch((error) => {
