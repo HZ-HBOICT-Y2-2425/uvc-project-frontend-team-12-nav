@@ -1,10 +1,27 @@
 <script>
+  import { onMount, onDestroy } from 'svelte';
+
   let showerTime = 5; // Default shower time in minutes
   let timer;
   let remainingTime = showerTime * 60; // Convert to seconds
   let isRunning = false;
   let isPaused = false;
   let totalShowerTime = 0; // Track total time spent in seconds
+  let hasPlayedAlarm = false; // Flag to ensure alarm plays only once
+
+  // Initialize the alarm audio with the local path
+  const alarm = new Audio('/alarm.mp3');
+  alarm.preload = 'auto';
+  alarm.volume = 0.7; // Adjust volume as needed
+
+  // Event listeners for debugging
+  alarm.addEventListener('canplaythrough', () => {
+    console.log('Alarm audio is ready to play.');
+  });
+
+  alarm.addEventListener('error', (e) => {
+    console.error('Error loading alarm audio:', e);
+  });
 
   // Funny shower quotes
   const showerQuotes = [
@@ -33,6 +50,8 @@
   // Update remaining time when showerTime changes
   const updateRemainingTime = () => {
     remainingTime = showerTime * 60;
+    hasPlayedAlarm = false; // Reset the alarm flag
+    console.log(`Timer updated: ${formatTime(remainingTime)}`);
   };
 
   const startTimer = () => {
@@ -43,11 +62,26 @@
     timer = setInterval(() => {
       if (remainingTime > 0) {
         remainingTime--;
+
+        // Debugging: Log remaining time
+        console.log(`Remaining Time: ${remainingTime} seconds`);
+
+        // Check if remainingTime is exactly 60 seconds and alarm hasn't played yet
+        if (remainingTime === 60 && !hasPlayedAlarm) {
+          alarm.play().then(() => {
+            console.log('Alarm played successfully.');
+          }).catch((error) => {
+            console.error('Error playing alarm sound:', error);
+          });
+          hasPlayedAlarm = true;
+        }
+
       } else {
         clearInterval(timer);
         isRunning = false;
         alert("Shower time's up!");
         totalShowerTime += showerTime * 60; // Add completed time
+        hasPlayedAlarm = false; // Reset for next use
       }
     }, 1000);
   };
@@ -56,6 +90,7 @@
     clearInterval(timer);
     isRunning = false;
     isPaused = true;
+    console.log('Timer paused.');
   };
 
   const endTimer = async () => {
@@ -64,6 +99,8 @@
     const timeSpent = showerTime * 60 - remainingTime; // Time spent in seconds
     totalShowerTime += timeSpent;
     remainingTime = showerTime * 60; // Reset timer
+    hasPlayedAlarm = false; // Reset the alarm flag
+    console.log(`Timer ended. Time spent: ${formatTime(timeSpent)}`);
 
     // Convert timeSpent to minutes
     const duration = timeSpent / 60;
@@ -95,6 +132,17 @@
       alert('Network error occurred while logging shower usage.');
     }
   };
+
+  // Ensure that the alarm is paused/stopped when the component is destroyed
+  onDestroy(() => {
+    if (alarm) {
+      alarm.pause();
+      alarm.currentTime = 0;
+      console.log('Alarm stopped and reset.');
+    }
+    clearInterval(timer);
+    console.log('Timer cleared on component destroy.');
+  });
 </script>
 
 <div class="app-container {isRunning ? 'shower-bg' : ''} w-full">
@@ -275,5 +323,40 @@
     100% {
       transform: translateY(100vh) scale(0.8);
     }
+  }
+
+  /* Additional Styling */
+  .header {
+    width: 100%;
+  }
+
+  .quote-container {
+    max-width: 400px;
+  }
+
+  .timer-display {
+    font-family: 'Arial', sans-serif; /* Preserved Font */
+    color: #1a202c; /* Tailwind's text-gray-800 equivalent */
+  }
+
+  .progress-container {
+    position: relative;
+  }
+
+  .progress-bar {
+    transition: width 1s linear;
+  }
+
+  .time-selector button {
+    font-size: 1.5rem;
+  }
+
+  .action-buttons button,
+  .statistics-buttons button {
+    font-size: 1rem;
+  }
+
+  .statistics-buttons a {
+    text-decoration: none;
   }
 </style>

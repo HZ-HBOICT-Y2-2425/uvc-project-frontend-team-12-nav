@@ -1,14 +1,27 @@
 <script>
   import { onMount } from 'svelte';
 
-  let todayShowerTime = 0; // in minutes
-  let yesterdayShowerTime = 0; // in minutes
+  let todayShowerTime = 0; // in seconds
+  let yesterdayShowerTime = 0; // in seconds
 
   let todayWaterUsage = 0; // in liters
   let yesterdayWaterUsage = 0; // in liters
 
   let bottlesForToday = [];
   let bottlesForYesterday = [];
+
+  /**
+   * Converts decimal minutes to an object containing hours, minutes, and seconds.
+   * @param {number} minutesDecimal - The total shower time in decimal minutes.
+   * @returns {Object} An object with hours, minutes, and seconds.
+   */
+  const formatTime = (minutesDecimal) => {
+    const totalSeconds = Math.round(minutesDecimal * 60);
+    const hours = Math.floor(totalSeconds / 3600);
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
+    const seconds = totalSeconds % 60;
+    return `${hours}h ${minutes}m ${seconds}s`;
+  };
 
   const fetchShowerStats = async () => {
     try {
@@ -23,8 +36,13 @@
         yesterdayWaterUsage = data.waterUsageYesterday;
 
         // Since water usage per minute is 9 liters
-        todayShowerTime = (todayWaterUsage / 9).toFixed(2); // in minutes
-        yesterdayShowerTime = (yesterdayWaterUsage / 9).toFixed(2); // in minutes
+        // Calculate shower time in decimal minutes
+        const todayMinutes = todayWaterUsage / 9;
+        const yesterdayMinutes = yesterdayWaterUsage / 9;
+
+        // Convert decimal minutes to total seconds
+        todayShowerTime = todayMinutes * 60;
+        yesterdayShowerTime = yesterdayMinutes * 60;
 
         // Calculate number of bottles (assuming 1 bottle = 1 liter)
         bottlesForToday = Array(Math.round(todayWaterUsage)).fill(1);
@@ -61,7 +79,7 @@
   <!-- Today's Shower Time -->
   <div class="bg-white shadow-md rounded-lg p-6 w-full max-w-md mt-6">
     <h2 class="text-2xl font-bold text-green-600">Today's Shower Time</h2>
-    <p class="text-xl mt-2">{todayShowerTime} minutes</p>
+    <p class="text-xl mt-2">{formatTime(todayShowerTime / 60)}</p>
     <p class="text-lg text-gray-600">{todayWaterUsage} liters of water used</p>
     <!-- Bottles Visualization -->
     <div class="flex flex-wrap justify-center gap-2">
@@ -82,7 +100,7 @@
   <!-- Yesterday's Shower Time -->
   <div class="bg-white shadow-md rounded-lg p-6 w-full max-w-md mt-6">
     <h2 class="text-2xl font-bold text-green-600">Yesterday's Shower Time</h2>
-    <p class="text-xl mt-2">{yesterdayShowerTime} minutes</p>
+    <p class="text-xl mt-2">{formatTime(yesterdayShowerTime / 60)}</p>
     <p class="text-lg text-gray-600">{yesterdayWaterUsage} liters of water used</p>
     <!-- Bottles Visualization -->
     <div class="flex flex-wrap justify-center gap-2">
