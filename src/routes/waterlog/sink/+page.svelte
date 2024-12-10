@@ -1,6 +1,7 @@
 <script>
-    import { onMount, onDestroy } from "svelte";
+    import { sinkStore } from '$lib/stores/sinktimerStore.js';
 
+<<<<<<< HEAD
     let timer;
     let elapsedTime = 0; // Total time spent on the sink (in seconds)
     let isRunning = false; // To track if the timer is running
@@ -77,126 +78,49 @@
     onDestroy(() => {
         clearInterval(timer); // Clean up the interval when the component is destroyed
     });
+=======
+    import Header from '$lib/components/header.svelte';
+    import TimerDisplay from '$lib/components/timerDisplay.svelte';
+    import QuoteDisplay from '$lib/components/quoteDisplay.svelte';
+    import ControlButtons from '$lib/components/controlButtons.svelte';
+    import WaterBackground from '$lib/components/waterBackground.svelte';
+>>>>>>> feature/waterlog
 </script>
 
-<!-- Full Screen Green Card -->
 <div class="min-h-screen flex flex-col relative">
-    <!-- Green Card Section for Heading -->
-    <div class="w-full bg-green-600 text-white p-6 rounded-b-lg mb-0">
-        <h1 class="text-3xl font-bold text-center">Sink Timer</h1>
-    </div>
+    <!-- Using Header as is. If you added props like `title` or `showBackButton`, you can adjust here -->
+    <Header />
 
-    <!-- Timer and other content section -->
     <div class="flex flex-col items-center justify-center py-10 space-y-6 flex-1">
-        <!-- Timer Display -->
-        <div class="text-4xl font-bold text-black-600 mb-6">
-            {formatTime(elapsedTime)}
-        </div>
+        <!-- Pass sinkStore's elapsedTime to TimerDisplay -->
+        <TimerDisplay timeInSeconds={$sinkStore.elapsedTime} />
 
-        <!-- Funny Sink Quote -->
-        <div class="text-lg text-center text-gray-600 mb-6 italic">
-            {currentQuote}
-        </div>
+        <!-- Use sink quotes -->
+        <QuoteDisplay type="sink" />
 
-        <!-- Start, Pause Buttons -->
-        <div class="flex flex-col items-center mb-6">
-            {#if !isRunning}
-                <button on:click={startTimer} class="bg-green-500 text-white py-3 px-4 rounded-lg shadow-md hover:bg-green-600 focus:outline-none mb-4">
-                    Start Timer
-                </button>
-            {:else}
-                <button on:click={pauseTimer} class="bg-yellow-500 text-white py-3 px-4 rounded-lg shadow-md hover:bg-yellow-600 focus:outline-none mb-4">
-                    Pause Timer
-                </button>
-            {/if}
-
-            <!-- Reset Button -->
-            <button on:click={resetTimer} class="bg-gray-500 text-white py-3 px-6 rounded-lg shadow-md hover:bg-gray-600 focus:outline-none mb-4">
-                Reset Timer
-            </button>
-
-            <!-- Back Button -->
-            <button on:click={goBack} class="bg-red-500 text-white py-3 px-6 rounded-lg shadow-md hover:bg-red-600 focus:outline-none">
-                End Usage
-            </button>
-        </div>
+        <!-- Provide sinkStore to ControlButtons and customize end button text -->
+        <ControlButtons store={sinkStore} endButtonText="End Usage" />
     </div>
 
-    <!-- Realistic Flowing Water Background -->
-    <div class="water-background" style="height: {waterHeight}%; transition: height 1s ease-out;">
-        <div class="water-wave wave1"></div>
-        <div class="water-wave wave2"></div>
-        <div class="water-wave wave3"></div>
-    </div>
+    <WaterBackground />
 </div>
 
 <style>
     :root {
         --water-height: 0%;
     }
-    /* Full screen layout */
+
     .min-h-screen {
         min-height: 100vh;
     }
 
-    /* Water Background */
-    .water-background {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        overflow: hidden;
-        z-index: -1; /* Behind the main content */
-        background: rgba(0, 180, 216, 0.7);
-        border-radius: 20% 20% 0 0;
-    }
-
-    /* Waves inside the water */
-    .water-wave {
-        position: absolute;
-        bottom: 0;
-        width: 200%;
-        height: 20px;
-        background: rgba(0, 180, 216, 0.5);
-        opacity: 0.6;
-        border-radius: 50%;
-        transform: scaleX(1.5);
-    }
-
-    .wave1 {
-        animation: wave-animation 5s infinite linear;
-        z-index: 2;
-    }
-
-    .wave2 {
-        animation: wave-animation 6s infinite linear reverse;
-        background: rgba(0, 150, 199, 0.5);
-        z-index: 3;
-    }
-
-    .wave3 {
-        animation: wave-animation 7s infinite linear;
-        background: rgba(0, 100, 150, 0.4);
-        z-index: 1;
-    }
-
-    /* Wave Animation */
-    @keyframes wave-animation {
-        0% {
-            transform: translateX(0);
-        }
-        100% {
-            transform: translateX(-50%);
-        }
-    }
-
-    /* Styling for Buttons */
+    /* Button and layout styling matches original */
     button {
-        padding: 12px 24px; /* Consistent padding */
-        font-size: 1rem; /* Consistent font size */
-        width: 160px; /* Set the same width for all buttons */
-        text-align: center; /* Center text in buttons */
-        border-radius: 0.375rem; /* Consistent border radius */
-        transition: background-color 0.3s ease; /* Smooth transition */
+        padding: 12px 24px;
+        font-size: 1rem;
+        width: 160px;
+        text-align: center;
+        border-radius: 0.375rem;
+        transition: background-color 0.3s ease;
     }
 </style>
