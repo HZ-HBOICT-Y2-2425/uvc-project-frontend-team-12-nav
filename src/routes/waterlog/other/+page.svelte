@@ -20,14 +20,6 @@
     // Define a userId (In production, obtain this dynamically)
     const userId = "1"; // Replace with dynamic user ID as needed
 
-    // Define water usage rates (for frontend calculations if needed)
-    const WATER_USAGE_RATES = {
-        Cooking: 0.5,    // liters per 500ml cup
-        Cleaning: 5,     // liters per 5L bucket
-        Gardening: 0.1,  // liters per second
-        Drinking: 1,     // liters per liter consumed
-    };
-
     // Load saved category data from localStorage on mount
     onMount(() => {
         if (typeof window !== 'undefined') {

@@ -34,14 +34,4 @@
     .min-h-screen {
         min-height: 100vh;
     }
-
-    /* Button and layout styling matches original */
-    button {
-        padding: 12px 24px;
-        font-size: 1rem;
-        width: 160px;
-        text-align: center;
-        border-radius: 0.375rem;
-        transition: background-color 0.3s ease;
-    }
 </style>

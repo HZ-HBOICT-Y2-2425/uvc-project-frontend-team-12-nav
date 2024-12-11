@@ -95,39 +95,4 @@
       transform: translateY(100vh) scale(0.8);
     }
   }
-
-  /* Additional Styling */
-  .header {
-    width: 100%;
-  }
-
-  .quote-container {
-    max-width: 400px;
-  }
-
-  .timer-display {
-    font-family: 'Arial', sans-serif; /* Preserved Font */
-    color: #1a202c; /* Tailwind's text-gray-800 equivalent */
-  }
-
-  .progress-container {
-    position: relative;
-  }
-
-  .progress-bar {
-    transition: width 1s linear;
-  }
-
-  .time-selector button {
-    font-size: 1.5rem;
-  }
-
-  .action-buttons button,
-  .statistics-buttons button {
-    font-size: 1rem;
-  }
-
-  .statistics-buttons a {
-    text-decoration: none;
-  }
 </style>
