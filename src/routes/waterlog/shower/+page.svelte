@@ -1,13 +1,5 @@
 <!-- src/routes/waterlog/shower/+page.svelte -->
 <script>
-<<<<<<< HEAD
-  let showerTime = 5; // Default shower time in minutes
-  let timer;
-  let remainingTime = showerTime * 60; // Convert to seconds
-  let isRunning = false;
-  let isPaused = false;
-  // let totalShowerTime = 0; // Track total time spent in seconds
-=======
   import Header from '$lib/components/header.svelte';
   import QuoteDisplay from '$lib/components/quoteDisplay.svelte';
   import TimerDisplay from '$lib/components/timerDisplay.svelte';
@@ -15,7 +7,6 @@
   import TimeSelector from '$lib/components/timeSelector.svelte';
   import ControlButtons from '$lib/components/controlButtons.svelte';
   import StatisticsButton from '$lib/components/statisticsButton.svelte';
->>>>>>> feature/waterlog
 
   import { timerStore } from '$lib/stores/timerStore.js';
   import { onDestroy } from 'svelte';
