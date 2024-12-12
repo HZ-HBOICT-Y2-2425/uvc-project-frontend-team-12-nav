@@ -1,4 +1,3 @@
-// src/lib/stores/timerStore.js
 import { writable, get } from 'svelte/store';
 import { browser } from '$app/environment'; // SvelteKit environment variable to detect browser
 
@@ -13,7 +12,7 @@ function createTimerStore() {
     });
 
     let timer = null;
-    let alarm = null; // Will initialize in the browser only
+    let alarm = null; 
 
     // Initialize alarm only in the browser
     function initializeAlarm() {
@@ -134,7 +133,7 @@ function createTimerStore() {
         console.log(`Timer ended. Time spent: ${formatTime(timeSpent)}`);
 
         try {
-            const response = await fetch('http://localhost:3011/api/water-usage/shower', {
+            const response = await fetch('http://localhost:3011/waterlog/shower', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

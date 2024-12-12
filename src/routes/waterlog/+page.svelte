@@ -27,12 +27,6 @@
             currentDate = newDate;
         }
     };
-  
-    // Handler for the Add button
-    const handleAdd = () => {
-        // Replace '/waterlog/add' with your desired route or action
-        window.location.href = '/waterlog/add';
-    };
   </script>
   
   <div class="min-h-screen bg-blue-50 flex flex-col items-center py-6 relative">
@@ -116,20 +110,6 @@
                 <img src="/other.svg" alt="Other" class="w-16 h-16" />
             </button>
         </a>
-  
-        <!-- Add Button -->
-        <button
-            on:click={handleAdd}
-            class="w-full bg-green-500 text-white py-8 rounded-lg shadow-md hover:bg-green-600 focus:outline-none flex justify-center items-center px-6"
-        >
-            <!-- Plus Icon Inside a Circle -->
-            <div class="flex items-center justify-center w-12 h-12 bg-white rounded-full">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
-                </svg>
-            </div>
-            <span class="ml-4 text-xl font-bold">Add</span>
-        </button>
     </div>
   </div>
   

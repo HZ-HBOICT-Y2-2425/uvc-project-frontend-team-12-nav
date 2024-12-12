@@ -48,7 +48,7 @@ function createSinkStore() {
         const current = get({ subscribe });
         const durationMinutes = current.elapsedTime / 60;
         try {
-            const response = await fetch('http://localhost:3011/api/water-usage/sink', {
+            const response = await fetch('http://localhost:3011/waterlog/sink', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

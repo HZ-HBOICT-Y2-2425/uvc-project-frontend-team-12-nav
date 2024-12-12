@@ -1,204 +1,67 @@
 <script>
-    import { onMount, onDestroy } from "svelte";
+  import Header from '$lib/components/layout/Header.svelte';
+  import QuoteDisplay from '$lib/components/waterlog/quoteDisplay.svelte';
+  import FlushCounter from '$lib/components/waterlog/flushCounter.svelte';
+  import FlushAnimation from '$lib/components/waterlog/flushAnimation.svelte';
   
-    let flushCount = 0; // Tracks the number of times the toilet was flushed
-    let dayTotalFlushes = 0; // Total flushes count for the day
-    let funnyQuote = ""; // Holds the selected funny quote
-    let showFlushAnimation = false; // Controls visibility of the flush animation
+  import { toiletStore } from '$lib/stores/toiletStore.js';
+  import { onDestroy } from 'svelte';
+  import { onMount } from 'svelte';
   
-    // Array of funny toilet-related quotes
-    const toiletQuotes = [
-      "When nature calls, you must answer!",
-      "Flush your worries away!",
-      "The throne is the best thinking place.",
-      "A royal flush beats a full house.",
-      "Don't rush while on the flush!",
-      "This is where the magic happens.",
-      "You know it's serious business when the door locks.",
-      "Always leave the seat up for debate.",
-    ];
+  // Automatically subscribe to toiletStore with $ syntax
+  $: isRunning = $toiletStore.isRunning;
   
-    // For demonstration purposes, we'll hardcode the userId
-    const userId = '1'; // Replace with actual user identification logic
+  // Go back to the previous page
+  const goBack = () => {
+    window.history.back(); // Goes back to the previous page in the history
+  };
   
-    // Load saved counts and set a random funny quote on mount
-    onMount(() => {
-      if (typeof window !== 'undefined') { // Check if we are in the browser
-        const savedFlushes = localStorage.getItem('toiletFlushes');
-        if (savedFlushes) {
-          flushCount = parseInt(savedFlushes);
-        }
+  onMount(() => {
+    // Any additional initialization if needed
+  });
   
-        const savedDayFlushes = localStorage.getItem('dayTotalFlushes');
-        if (savedDayFlushes) {
-          dayTotalFlushes = parseInt(savedDayFlushes);
-        }
-      }
-  
-      // Select a random funny quote
-      funnyQuote = toiletQuotes[Math.floor(Math.random() * toiletQuotes.length)];
-    });
-  
-    // Increase flush count and trigger animation
-    const incrementFlush = async () => {
-      flushCount++;
-      triggerFlushAnimation();
-  
-      // Save the updated flush count locally
-      if (typeof window !== 'undefined') {
-        localStorage.setItem('toiletFlushes', flushCount);
-      }
-  
-      // Prepare data to send to the backend
-      const data = {
-        userId: userId,
-        flushes: 1, // We're incrementing by 1 flush
-      };
-  
-      try {
-        const response = await fetch('http://localhost:3011/api/water-usage/toilet', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        });
-  
-        if (!response.ok) {
-          const errorData = await response.json();
-          console.error('Error logging toilet usage:', errorData.message);
-        } else {
-          const result = await response.json();
-          console.log('Toilet usage logged:', result);
-        }
-      } catch (error) {
-        console.error('Error connecting to backend:', error);
-      }
-    };
-  
-    // Decrease flush count
-    const decrementFlush = async () => {
-      if (flushCount > 0) {
-        flushCount--; // Decrease the flush count
-        if (typeof window !== 'undefined') {
-          localStorage.setItem('toiletFlushes', flushCount);
-        }
-  
-        // Prepare data to send to the backend
-        const data = {
-          userId: userId,
-          flushes: -1, // Indicate a decrement
-        };
-  
-        try {
-          const response = await fetch('http://localhost:3011/api/water-usage/toilet', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-          });
-  
-          if (!response.ok) {
-            const errorData = await response.json();
-            console.error('Error adjusting toilet usage:', errorData.message);
-          } else {
-            const result = await response.json();
-            console.log('Toilet usage adjusted:', result);
-          }
-        } catch (error) {
-          console.error('Error connecting to backend:', error);
-        }
-      }
-    };
-  
-    // Trigger the flush animation
-    const triggerFlushAnimation = () => {
-      showFlushAnimation = true;
-      setTimeout(() => {
-        showFlushAnimation = false; // Hide animation after 3 seconds
-      }, 3000);
-    };
-  
-    // Go back to the previous page
-    const goBack = () => {
-      window.history.back(); // Goes back to the previous page in the history
-    };
-  
-    onDestroy(() => {
-      // Save daily totals in localStorage before the component is destroyed (only in the browser)
-      if (typeof window !== 'undefined') {
-        dayTotalFlushes += flushCount;
-        localStorage.setItem('dayTotalFlushes', dayTotalFlushes);
-      }
-    });
-  </script>
-  
-  <div class="min-h-screen bg-blue-50 flex flex-col px-0 mx-0 relative">
-    <!-- Back Button (Positioned at top left) -->
-    <button on:click={goBack} class="absolute top-4 left-4 bg-red-500 text-white py-2 px-4 rounded-lg shadow-md hover:bg-red-600 focus:outline-none">
-      Back
-    </button>
-  
-    <!-- Green Card Section for Heading (Full Width, no padding or margin) -->
-    <div class="w-full bg-green-600 text-white p-6 rounded-b-lg">
-      <h1 class="text-3xl font-bold mb-4 text-center">Flush Count</h1>
-    </div>
-  
-    <!-- Content Below Green Card (Centered in the remaining screen space) -->
-    <div class="flex flex-col items-center justify-center flex-grow space-y-8">
-      <!-- Flush Animation (using toilet.gif) -->
-      {#if showFlushAnimation}
-        <div class="flush-animation">
-          <img src="/toilet.gif" alt="Toilet flush animation" class="w-48 h-48 object-cover">
-        </div>
-      {/if}
-  
-      <!-- Funny Quote Display -->
-      <div class="text-center text-lg italic">"{funnyQuote}"</div>
-  
-      <!-- Flush Counter -->
-      <div class="flex items-center space-x-6 text-2xl font-bold">
-        <button on:click={decrementFlush} class="bg-gray-500 text-white py-2 px-4 rounded-full shadow-md hover:bg-gray-600 focus:outline-none">
-          &#8592; <!-- Left arrow -->
-        </button>
-        <div>{flushCount}</div>
-        <button on:click={incrementFlush} class="bg-green-500 text-white py-2 px-4 rounded-full shadow-md hover:bg-green-600 focus:outline-none">
-          &#8594; <!-- Right arrow -->
-        </button>
-      </div>
-    </div>
+  onDestroy(() => {
+    toiletStore.destroyStore();
+  });
+</script>
+
+<div class="min-h-screen bg-blue-50 flex flex-col relative overflow-hidden">
+  <!-- Header Component -->
+  <Header title="Toilet Flush Counter" showBack={true} backRoute="/waterlog"/>
+
+  {#if $toiletStore.showFlushAnimation}
+    <FlushAnimation />
+  {/if}
+
+  <!-- Content Below Header (Centered in the remaining screen space) -->
+  <div class="flex-grow flex flex-col items-center justify-center text-center space-y-8 p-4">
+    <!-- Funny Quote Display -->
+    <QuoteDisplay type="toilet" />
+
+    <!-- Flush Counter Component -->
+    <FlushCounter />
   </div>
-  
-  <style>
-    .flush-animation {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: #ffe6cc;
-      padding: 2rem;
-      border-radius: 1rem;
-      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.3);
-      animation: fadeInOut 3s ease-in-out;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-  
-    @keyframes fadeInOut {
-      0% {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(0.8);
-      }
-      50% {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-      }
-      100% {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(0.8);
-      }
-    }
-  </style>
-  
+</div>
+
+<style>
+  .min-h-screen {
+    min-height: 100vh;
+  }
+
+  .flex-grow {
+    flex-grow: 1;
+  }
+
+  /* Prevent horizontal overflow */
+  body, html {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  /* Ensure images and other media are responsive */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+</style>

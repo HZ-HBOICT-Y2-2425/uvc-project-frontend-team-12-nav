@@ -1,5 +1,5 @@
 <script>
-    import { timerStore } from '../stores/timerStore.js';
+    import { timerStore } from '/src/lib/stores/timerStore.js';
     import { derived } from 'svelte/store';
 
     const progressPercentage = derived(timerStore, $timerStore => {

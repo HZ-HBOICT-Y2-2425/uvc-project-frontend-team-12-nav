@@ -1,16 +1,14 @@
-<!-- src/routes/waterlog/shower/+page.svelte -->
 <script>
-  import Header from '$lib/components/header.svelte';
-  import QuoteDisplay from '$lib/components/quoteDisplay.svelte';
-  import TimerDisplay from '$lib/components/timerDisplay.svelte';
-  import ProgressBar from '$lib/components/progressBar.svelte';
-  import TimeSelector from '$lib/components/timeSelector.svelte';
-  import ControlButtons from '$lib/components/controlButtons.svelte';
-  import StatisticsButton from '$lib/components/statisticsButton.svelte';
+  import Header from '$lib/components/layout/Header.svelte';
+  import QuoteDisplay from '$lib/components/waterlog/quoteDisplay.svelte';
+  import TimerDisplay from '$lib/components/waterlog/timerDisplay.svelte';
+  import ProgressBar from '$lib/components/waterlog/progressBar.svelte';
+  import TimeSelector from '$lib/components/waterlog/timeSelector.svelte';
+  import ControlButtons from '$lib/components/waterlog/controlButtons.svelte';
+  import StatisticsButton from '$lib/components/waterlog/statisticsButton.svelte';
 
   import { timerStore } from '$lib/stores/timerStore.js';
-  import { onDestroy } from 'svelte';
-  import { onMount } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
 
   // Automatically subscribe to timerStore with $ syntax
   $: isRunning = $timerStore.isRunning;
@@ -25,10 +23,10 @@
   });
 </script>
 
-<div class="app-container {isRunning ? 'shower-bg' : ''} w-full">
-  <Header />
+<div class="app-container {isRunning ? 'shower-bg' : ''}">
+  <Header title="Shower Timer" showBack={true} backRoute="/waterlog"/>
 
-  <div class="main-content flex flex-col items-center justify-center space-y-6">
+  <div class="main-content">
     <!-- Pass type="shower" to display shower quotes -->
     <QuoteDisplay type="shower" />
 
@@ -53,13 +51,24 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Ensures content starts at the top */
     align-items: center; /* Center horizontally */
     width: 100vw; /* Full width of the viewport */
     height: 100vh; /* Full height of the viewport */
     background: #e6f7ff;
     padding: 0; /* Remove any padding to avoid extra space */
     overflow: hidden;
+  }
+
+  .main-content {
+    flex: 1; /* Allow main-content to grow and take available space */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Center vertically within main-content */
+    gap: 1.5rem; /* Equivalent to space-y-6 for spacing between elements */
+    width: 100%; /* Ensure main-content takes full width */
+    max-width: 600px; /* Optional: Limit the maximum width for better readability */
+    padding: 1rem; /* Optional: Add some padding */
   }
 
   /* Shower background animation when running */
