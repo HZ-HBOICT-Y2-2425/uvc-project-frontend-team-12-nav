@@ -41,7 +41,7 @@
     <Header title="Other Water Usages" showBack={true} backRoute="/waterlog"/>
 
     <!-- Content Below the Header (Centered Vertically and Horizontally) -->
-    <div class="flex-grow flex flex-col items-center justify-center text-center space-y-8 w-15 max-w-md">
+    <div class="flex-grow flex flex-col items-center justify-center text-center space-y-8 max-w-md mx-auto mt-8">
         <!-- Category Selector -->
         <CategorySelector onSelect={handleCategorySelect} />
 
