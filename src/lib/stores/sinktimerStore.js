@@ -1,5 +1,8 @@
 import { writable, get, derived } from 'svelte/store';
 
+// Define userId (Replace this with actual user identification logic)
+const userId = '1';
+
 function createSinkStore() {
     const initialState = {
         elapsedTime: 0,
@@ -48,7 +51,7 @@ function createSinkStore() {
         const current = get({ subscribe });
         const durationMinutes = current.elapsedTime / 60;
         try {
-            const response = await fetch('http://localhost:3011/waterlog/sink', {
+            const response = await fetch(`http://localhost:3011/waterlog/sink?userId=${userId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

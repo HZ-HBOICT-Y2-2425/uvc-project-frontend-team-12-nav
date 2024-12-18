@@ -1,21 +1,42 @@
-<!-- src/routes/+page.svelte -->
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { goto } from '$app/navigation';
   import Header from '$lib/components/layout/Header.svelte';
   import PageContainer from '$lib/components/layout/PageContainer.svelte';
   import WaterTank from '$lib/components/ui/WaterTank.svelte';
   import NavigationButton from '$lib/components/ui/NavigationButton.svelte';
-  
-  const totalCapacity = 1125;
-  let currentUsage = 450;
-  const weeklySaving = 40;
+
+  const totalCapacity = 1500; // Tank total capacity
+  let currentUsage = 0;       // Initialize total usage to 0
+  let weeklySaving = 0;       // Initialize weekly saving to 0
+  const userId = '1';
 
   const navigationButtons = [
     { label: 'Profile', action: () => goto('/profile') },
     { label: 'Inventory', action: () => goto('/inventory') },
     { label: 'Community', action: () => goto('/community') }
   ];
+
+  const fetchTotalWaterUsage = async () => {
+    try {
+      const response = await fetch(`http://localhost:3011/waterlog/total?userId=${userId}`);
+      const data = await response.json();
+      if (response.ok) {
+        currentUsage = data.totalWaterUsed || 0; // Ensure fallback to 0
+        weeklySaving = data.weeklySaving || 0;   // Ensure fallback to 0
+      } else {
+        console.error('Failed to fetch total water usage:', data.message);
+      }
+    } catch (error) {
+      console.error('Network error while fetching total water usage:', error);
+    }
+  };
+
+  onMount(() => {
+    fetchTotalWaterUsage();
+  });
 </script>
+
 <PageContainer>
   <Header title="Home" />
   

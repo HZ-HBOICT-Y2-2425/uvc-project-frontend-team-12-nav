@@ -76,7 +76,7 @@ function createWashingStore() {
       };
       console.log('Sending data to backend:', dataToSend);
 
-      const response = await fetch(`http://localhost:3011/waterlog/washing`, {
+      const response = await fetch(`http://localhost:3011/waterlog/washing?userId=${userId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

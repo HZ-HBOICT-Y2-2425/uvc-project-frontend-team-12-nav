@@ -1,6 +1,9 @@
 import { writable, get } from 'svelte/store';
 import { browser } from '$app/environment'; // SvelteKit environment variable to detect browser
 
+// Define userId (Replace this with actual user identification logic)
+const userId = '1';
+
 function createTimerStore() {
     const { subscribe, set, update } = writable({
         showerTime: 5,
@@ -133,7 +136,7 @@ function createTimerStore() {
         console.log(`Timer ended. Time spent: ${formatTime(timeSpent)}`);
 
         try {
-            const response = await fetch('http://localhost:3011/waterlog/shower', {
+            const response = await fetch(`http://localhost:3011/waterlog/shower?userId=${userId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

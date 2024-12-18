@@ -1,34 +1,62 @@
-<!-- src/routes/statistics/+page.svelte -->
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { slide, fade } from 'svelte/transition';
+  import { fade, slide } from 'svelte/transition';
   import { tweened } from 'svelte/motion';
   import { cubicOut } from 'svelte/easing';
-  import { dailyUsage, monthlyUsage } from '$lib/stores/waterData';
   import AnimatedNumber from '$lib/components/AnimatedNumber.svelte';
+  import { dailyUsage, monthlyUsage } from '$lib/stores/waterData';
 
   let mounted = false;
-  let weeklyTarget = 1500; // Weekly target in liters
+  let totalSaved = 0;
+  let weeklyTarget = 1500; // Weekly target
+  let weeklyUsage = 0;
+  let weeklyProgress = 0; // Initialize to 0
+  let averageDaily = 0; // Initialize to 0
 
-  // Calculate weekly usage from daily data
-  $: weeklyUsage = $dailyUsage
-    .slice(-7)
-    .reduce((total, day) => total + day.totalUsage, 0);
-
-  // Calculate weekly progress percentage
-  $: weeklyProgress = (weeklyUsage / weeklyTarget) * 100;
-
-  // Tweened value for the progress circle
+  const userId = '1';
   const strokeDashoffset = tweened(226.19, { duration: 1000, easing: cubicOut });
-  $: strokeDashoffset.set(226.19 - (weeklyProgress / 100) * 226.19);
 
-  // Calculate total savings and stats
-  $: totalSaved = $monthlyUsage.reduce((total, month) => total + month.saved, 0);
-  $: averageDaily =
-    $dailyUsage.reduce((total, day) => total + day.totalUsage, 0) / $dailyUsage.length;
+  function formatMonthYear(dateStr: string): string {
+    const [year, month] = dateStr.split('-');
+    const date = new Date(Number(year), Number(month) - 1);
+    return `${date.toLocaleString('default', { month: 'long' })} ${year}`;
+  }
 
-  onMount(() => {
+  // Fetch statistics data
+  const fetchStats = async () => {
+    try {
+      const response = await fetch(`http://localhost:3011/waterlog/stats?userId=${userId}`);
+      const data = await response.json();
+
+      if (response.ok) {
+        dailyUsage.set(data.stats.dailyUsage);
+        monthlyUsage.set(data.stats.monthlyUsage);
+
+        const startOfWeek = new Date();
+        startOfWeek.setDate(startOfWeek.getDate() - startOfWeek.getDay());
+        weeklyUsage = data.stats.dailyUsage
+          .filter(day => day.date >= startOfWeek.toISOString().split('T')[0])
+          .reduce((sum, day) => sum + day.totalUsage, 0);
+
+        totalSaved = data.stats.weeklyUsage.reduce((sum, week) => {
+          const weeklySaved = Math.max(0, weeklyTarget - week.totalUsage);
+          return sum + weeklySaved;
+        }, 0);
+      }
+    } catch (error) {
+      console.error('Failed to fetch stats:', error);
+    }
+  };
+
+  $: weeklyProgress = weeklyUsage > 0 ? (weeklyUsage / weeklyTarget) * 100 : 0;
+  $: if ($dailyUsage.length > 0) {
+    const totalUsage = $dailyUsage.reduce((total, day) => total + day.totalUsage, 0);
+    averageDaily = totalUsage / $dailyUsage.length;
+  }
+
+  onMount(async () => {
     mounted = true;
+    await fetchStats();
   });
 </script>
 
@@ -160,69 +188,66 @@
 
     <!-- Rest of the code remains unchanged -->
     <!-- Monthly Usage Breakdown -->
-    <div class="bg-white rounded-xl p-6 shadow-sm space-y-6">
-      <h2 class="text-xl font-semibold">Monthly Usage Breakdown</h2>
-
-      {#each $monthlyUsage as month, index}
-        <div class="space-y-2" transition:slide="{{ delay: index * 100 }}">
-          <div class="flex justify-between items-center">
-            <span class="font-medium">{month.month}</span>
-            <span class="text-gray-600">
-              <AnimatedNumber value={month.totalUsage} />L
-            </span>
-          </div>
-
-          <!-- Stacked bar chart -->
-          <div class="h-6 bg-gray-100 rounded-lg overflow-hidden relative">
-            <!-- Shower bar -->
-            <div
-              class="absolute h-full bg-blue-500 progress-bar"
-              style="width: {(month.breakdown.shower.usage / month.totalUsage) * 100}%"
-            ></div>
-            <!-- Toilet bar -->
-            <div
-              class="absolute h-full bg-violet-500 progress-bar"
-              style="
-                width: {(month.breakdown.toilet.usage / month.totalUsage) * 100}%;
-                left: {(month.breakdown.shower.usage / month.totalUsage) * 100}%;
-              "
-            ></div>
-            <!-- Tap bar -->
-            <div
-              class="absolute h-full bg-emerald-500 progress-bar"
-              style="
-                width: {(month.breakdown.tap.usage / month.totalUsage) * 100}%;
-                left: {((month.breakdown.shower.usage + month.breakdown.toilet.usage) / month.totalUsage) * 100}%;
-              "
-            ></div>
-          </div>
-
-          <!-- Usage breakdown -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-            <div class="flex items-center gap-2">
-              <div class="w-3 h-3 rounded-full bg-blue-500"></div>
-              <span>
-                Shower: <AnimatedNumber value={month.breakdown.shower.usage} />L
-                ({month.breakdown.shower.times} uses)
-              </span>
+    <div class="w-full max-w-7xl mx-auto p-4 space-y-8">
+      {#if mounted}
+        <!-- Monthly Usage Breakdown -->
+        <div class="bg-white rounded-xl p-6 shadow-sm space-y-6">
+          <h2 class="text-xl font-semibold">Monthly Usage Breakdown</h2>
+    
+          {#each $monthlyUsage as month, index}
+            <div class="space-y-2" transition:slide="{{ delay: index * 100 }}">
+              <div class="flex justify-between items-center">
+                <!-- Format Month and Year -->
+                <span class="font-medium">{formatMonthYear(month.month)}</span>
+                <span class="text-gray-600">
+                  <AnimatedNumber value={month.totalUsage} />L
+                </span>
+              </div>
+    
+              <!-- Stacked bar chart -->
+              <div class="h-6 bg-gray-100 rounded-lg overflow-hidden relative">
+                <!-- Shower Bar -->
+                <div
+                  class="absolute h-full bg-blue-500"
+                  style="width: {(month.breakdown.shower.usage / month.totalUsage) * 100}%"
+                ></div>
+                <!-- Sink Bar -->
+                <div
+                  class="absolute h-full bg-cyan-500"
+                  style="
+                    width: {(month.breakdown.sink.usage / month.totalUsage) * 100}%;
+                    left: {(month.breakdown.shower.usage / month.totalUsage) * 100}%;
+                  "
+                ></div>
+                <!-- Toilet Bar -->
+                <div
+                  class="absolute h-full bg-violet-500"
+                  style="
+                    width: {(month.breakdown.toilet.usage / month.totalUsage) * 100}%;
+                    left: {((month.breakdown.shower.usage + month.breakdown.sink.usage) / month.totalUsage) * 100}%;
+                  "
+                ></div>
+                <!-- Washing Bar -->
+                <div
+                  class="absolute h-full bg-yellow-500"
+                  style="
+                    width: {(month.breakdown.washing.usage / month.totalUsage) * 100}%;
+                    left: {((month.breakdown.shower.usage + month.breakdown.sink.usage + month.breakdown.toilet.usage) / month.totalUsage) * 100}%;
+                  "
+                ></div>
+                <!-- Other Bar -->
+                <div
+                  class="absolute h-full bg-gray-500"
+                  style="
+                    width: {(month.breakdown.other.usage / month.totalUsage) * 100}%;
+                    left: {((month.breakdown.shower.usage + month.breakdown.sink.usage + month.breakdown.toilet.usage + month.breakdown.washing.usage) / month.totalUsage) * 100}%;
+                  "
+                ></div>
+              </div>
             </div>
-            <div class="flex items-center gap-2">
-              <div class="w-3 h-3 rounded-full bg-violet-500"></div>
-              <span>
-                Toilet: <AnimatedNumber value={month.breakdown.toilet.usage} />L
-                ({month.breakdown.toilet.times} uses)
-              </span>
-            </div>
-            <div class="flex items-center gap-2">
-              <div class="w-3 h-3 rounded-full bg-emerald-500"></div>
-              <span>
-                Tap: <AnimatedNumber value={month.breakdown.tap.usage} />L
-                ({month.breakdown.tap.times} uses)
-              </span>
-            </div>
-          </div>
+          {/each}
         </div>
-      {/each}
+      {/if}
     </div>
 
     <!-- Today's Usage -->

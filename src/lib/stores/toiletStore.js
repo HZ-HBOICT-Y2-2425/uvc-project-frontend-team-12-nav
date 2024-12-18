@@ -77,7 +77,7 @@ function createToiletStore() {
   // Function to log flush usage to backend
   const logFlushUsage = async (flushes) => {
     try {
-      const response = await fetch(`http://localhost:3011/waterlog/toilet`, {
+      const response = await fetch(`http://localhost:3011/waterlog/toilet?userId=${userId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

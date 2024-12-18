@@ -2,7 +2,7 @@
     import { selectedCategory, categoryData, currentCount, drinkingLiters, gardeningTime } from '$lib/stores/otherStore.js';
     import { get } from 'svelte/store';
 
-    export let userId = "1"; // You can make this dynamic as needed
+    export let userId = "1";
 
     const saveCategoryData = async () => {
         const category = get(selectedCategory);
