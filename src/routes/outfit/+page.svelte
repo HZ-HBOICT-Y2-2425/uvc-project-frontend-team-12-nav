@@ -2,9 +2,9 @@
   import { onMount } from 'svelte';
   import Header from "$lib/components/layout/Header.svelte";
   import PageContainer from "$lib/components/layout/PageContainer.svelte";
-
+ 
   const showBack = true;
-
+ 
   type Item = {
     id: string;
     name: string;
@@ -13,11 +13,11 @@
     description: string;
     image: string;
   };
-
+ 
   type Outfit = {
     [key: string]: Item | null;
   };
-
+ 
   let inventory: Item[] = [];
   let outfit: Outfit = {
     Head: null,
@@ -26,57 +26,83 @@
     Shoes: null,
     Accessory: null,
   };
-
+ 
   let selectedSlot: string = '';
   let showModal = false;
   let loading = true;
   let error: string | null = null;
-
+ 
   async function fetchInventory() {
     try {
+      loading = true; // Set loading to true when retrying
+      error = null;   // Clear previous error
       const response = await fetch('http://localhost:3013/outfits');
       if (!response.ok) throw new Error('Failed to fetch inventory');
       inventory = await response.json();
-      loading = false;
     } catch (err) {
       error = err instanceof Error ? err.message : 'Failed to load inventory';
+    } finally {
       loading = false;
     }
   }
-
+ 
   function equipItem(slot: string, item: Item) {
     outfit[slot] = { ...item };
     showModal = false;
   }
-
+ 
   function openModal(slot: string) {
     selectedSlot = slot;
     showModal = true;
   }
-
+ 
   // Helper function to convert SVG code to data URL
   function svgToDataURL(svgString: string): string {
     return 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(svgString);
   }
-
+ 
   onMount(fetchInventory);
-</script>
-
-<PageContainer>
+ </script>
+ 
+ <PageContainer>
   <Header title="Outfit" {showBack} backRoute="/inventory"/>
-
+ 
   {#if loading}
     <div class="flex justify-center items-center mt-8">
       <p class="text-gray-600">Loading inventory...</p>
     </div>
   {:else if error}
-    <div class="flex justify-center items-center mt-8">
-      <p class="text-red-500">{error}</p>
+    <div class="flex flex-col items-center justify-center mt-8">
+      <div class="relative mb-8">
+        <svg class="w-24 h-24 animate-bounce" viewBox="0 0 100 100">
+          <path 
+            fill="#EF4444"
+            d="M50 0 C50 0 20 50 20 70 C20 85.75 33.25 100 50 100 C66.75 100 80 85.75 80 70 C80 50 50 0 50 0 Z"
+          >
+            <animate 
+              attributeName="fill" 
+              values="#EF4444;#3B82F6;#EF4444" 
+              dur="2s" 
+              repeatCount="indefinite"
+            />
+          </path>
+        </svg>
+        <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 w-24 h-1 bg-gray-200 rounded-full animate-pulse"/>
+      </div>
+ 
+      <h1 class="text-3xl font-bold text-center text-gray-800 mb-4">
+        We're sorry, but our servers appear to be offline!
+      </h1>
+      
+      <p class="text-lg text-gray-600 text-center mb-6">
+        Please check back in a little while.
+      </p>
+ 
       <button 
-        class="ml-4 bg-blue-500 text-white px-4 py-2 rounded"
+        class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-lg transition-colors shadow-lg"
         on:click={fetchInventory}
       >
-        Retry
+        Try Again
       </button>
     </div>
   {:else}
@@ -85,7 +111,7 @@
         <p class="text-center text-gray-600 pt-16">BEAVER</p>
       </div>
     </section>
-
+ 
     <section class="w-full max-w-md mt-8 mx-auto">
       <ul>
         {#each Object.entries(outfit) as [slot, item]}
@@ -110,7 +136,7 @@
         {/each}
       </ul>
     </section>
-
+ 
     {#if showModal && selectedSlot}
       <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div class="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
@@ -146,9 +172,9 @@
       </div>
     {/if}
   {/if}
-</PageContainer>
-
-<style>
+ </PageContainer>
+ 
+ <style>
   .mascot {
     width: 150px;
     height: 200px;
@@ -157,4 +183,4 @@
     margin: 0 10;
     position: relative;
   }
-</style>
+ </style>
