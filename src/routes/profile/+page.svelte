@@ -25,11 +25,12 @@
     { label: 'Personal Statistics', icon: BarChart2, action: () => goto('/statistics') },
     { label: 'Achievements', icon: Award, action: () => goto('/achievements') },
   ];
+
+  function logout() {
+    user.set(null); // Clear the user store
+    goto('/login'); // Redirect to login page
+  }
 </script>
-
-
-
-
 
 <div class="min-h-screen bg-white relative overflow-hidden">
     <!-- Curved line decoration at the top -->
@@ -81,9 +82,17 @@
               on:click={action}
             />
           {/each}
+
+          <!-- Logout Button at the bottom -->
+          <button 
+            class="w-full bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors mt-6"
+            on:click={logout}
+          >
+            Logout
+          </button>
         </div>
       </div>
-  
+
       <!-- Forest decoration at bottom -->
       <div class="absolute bottom-0 left-0 right-0">
         <div class="flex justify-between px-4">

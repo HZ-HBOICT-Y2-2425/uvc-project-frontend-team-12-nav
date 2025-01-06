@@ -1,6 +1,5 @@
 import { writable } from 'svelte/store';
 
-// Define the User interface
 export interface User {
   id: number;
   name: string;
@@ -8,5 +7,17 @@ export interface User {
   completedQuestionnaire: boolean;
 }
 
-// Create the store with User or null as the default type
-export const user = writable<User | null>(null);
+// Check localStorage only in the browser (prevents SSR errors)
+const storedUser = typeof window !== 'undefined' ? localStorage.getItem('user') : null;
+export const user = writable<User | null>(storedUser ? JSON.parse(storedUser) : null);
+
+// Sync store updates with localStorage
+user.subscribe((value) => {
+  if (typeof window !== 'undefined') {
+    if (value) {
+      localStorage.setItem('user', JSON.stringify(value));
+    } else {
+      localStorage.removeItem('user');
+    }
+  }
+});
