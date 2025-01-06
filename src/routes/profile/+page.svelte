@@ -54,14 +54,14 @@
         Back
       </button>
     </div>
-  
+
     {#if mounted}
       <div class="container mx-auto px-4 pt-16 pb-32" in:fade>
         <!-- Profile Header -->
         <div class="text-center mb-8" in:slide={{ delay: 200 }}>
           <h1 class="text-4xl font-bold mb-4">{username}</h1>
         </div>
-  
+
         <!-- Beaver Avatar -->
         <div class="flex justify-center mb-12" in:slide={{ delay: 400 }}>
           <div class="w-48 h-48 relative">
@@ -72,7 +72,7 @@
             />
           </div>
         </div>
-  
+
         <!-- Action Buttons -->
         <div class="space-y-4 max-w-sm mx-auto" in:slide={{ delay: 600 }}>
           {#each navigationButtons as { label, icon, action }}
@@ -84,7 +84,7 @@
           {/each}
 
           <!-- Logout Button at the bottom -->
-          <button 
+          <button
             class="w-full bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors mt-6"
             on:click={logout}
           >
@@ -93,7 +93,7 @@
         </div>
       </div>
 
-      <!-- Forest decoration at bottom -->
+      <!-- Forest decoration at bottom a -->
       <div class="absolute bottom-0 left-0 right-0">
         <div class="flex justify-between px-4">
           {#each Array(3) as _, i}
