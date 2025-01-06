@@ -3,6 +3,8 @@
   import { tweened } from 'svelte/motion';
   import { cubicOut } from 'svelte/easing';
   import { goto } from '$app/navigation';
+  import { user } from '$lib/stores/userStore'; // Correctly import the user store
+
 
   let showPassword = false;
   let email = '';
@@ -27,8 +29,8 @@
       const result = await response.json();
 
       if (response.ok) {
-        // Optionally store token if provided
-        // localStorage.setItem('token', result.token);
+
+        user.set(result.user)
         goto('/home'); // Redirect to dashboard
       } else {
         alert(result.message || 'Login failed');
