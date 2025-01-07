@@ -1,16 +1,38 @@
+
 <script lang="ts">
   import { onMount } from 'svelte';
   import { fade, slide } from 'svelte/transition';
   import { goto } from '$app/navigation';
   import NavigationButton from '$lib/components/ui/NavigationButton.svelte';
-  // import Header from '$lib/components/layout/Header.svelte';
-  // import PageContainer from '$lib/components/layout/PageContainer.svelte';
   import { CircleDollarSign, BarChart2, Award } from 'lucide-svelte';
   
-  let username = "Ivan Iliev";
+  let username = "";
   let mounted = false;
 
-  onMount(() => {
+  async function fetchUserData() {
+    const userId = localStorage.getItem('userId');
+    if (!userId) {
+      goto('/login');
+      return;
+    }
+
+    try {
+      const response = await fetch(`http://localhost:3012/current-user?userId=${userId}`);
+      if (response.ok) {
+        const data = await response.json();
+        username = data.user.name;
+      } else {
+        console.error('Failed to fetch user data');
+        username = "Guest User";
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+      username = "Guest User";
+    }
+  }
+
+  onMount(async () => {
+    await fetchUserData();
     mounted = true;
   });
 
