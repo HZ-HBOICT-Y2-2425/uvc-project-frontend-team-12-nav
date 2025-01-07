@@ -34,6 +34,9 @@
       const result = await response.json();
 
       if (response.ok) {
+        // Store the user ID in localStorage
+        localStorage.setItem('userId', result.user.id.toString());
+        console.log('Stored userId in localStorage:', result.user.id);
         goto('/questionnaire');
       } else {
         alert(result.message || 'Signup failed');
@@ -42,8 +45,7 @@
       console.error('Error during signup:', error);
       alert('An error occurred during signup.');
     }
-  };
-
+};
   // Animation for the logo
   let logoScale = tweened(1, {
     duration: 500,

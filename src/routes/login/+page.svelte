@@ -18,6 +18,7 @@
     const loginData = { email, password };
 
     try {
+      console.log('Attempting login with:', email);
       const response = await fetch('http://localhost:3012/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -25,19 +26,27 @@
       });
 
       const result = await response.json();
+      console.log('Login response:', result);
 
-      if (response.ok) {
-        // Optionally store token if provided
-        // localStorage.setItem('token', result.token);
+      if (response.ok && result.user) {
+        // Store the user ID in localStorage
+        localStorage.setItem('userId', result.user.id.toString());
+        console.log('Stored userId in localStorage:', result.user.id);
+        
+        // You can also store other user data if needed
+        localStorage.setItem('userName', result.user.name);
+        localStorage.setItem('userEmail', result.user.email);
+        
         goto('/home'); // Redirect to dashboard
       } else {
+        console.error('Login failed:', result.message);
         alert(result.message || 'Login failed');
       }
     } catch (error) {
       console.error('Error during login:', error);
       alert('An error occurred during login.');
     }
-  };
+};
 
   // Animation for the logo
   let logoScale = tweened(1, {
