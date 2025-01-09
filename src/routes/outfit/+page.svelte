@@ -248,11 +248,62 @@
       </div>
     </div>
   {:else}
-    <section class="flex flex-col items-center mt-4">
-      <div class="mascot">
-        <p class="text-center text-gray-600 pt-16">BEAVER</p>
-      </div>
-    </section>
+  <section class="flex flex-col items-center mt-4">
+    <!-- The main beaver container with Tailwind classes -->
+    <div class="relative w-72 h-80"> 
+      <!-- Base Beaver Image -->
+      <img
+        src="/beaver.svg" alt="Beaver"
+        class="absolute w-full h-full top-0 left-0 object-cover"
+      />
+  
+      <!-- HEAD item (if we have a Head slot) -->
+      {#if outfit.Head}
+        <img
+          src={svgToDataURL(outfit.Head.image)}
+          alt="Head"
+          class="absolute top-0 left-14 w-20 h-auto z-10"
+        />
+      {/if}
+  
+      <!-- SHIRT item -->
+      {#if outfit.Shirt}
+        <img
+          src={svgToDataURL(outfit.Shirt.image)}
+          alt="Shirt"
+          class="absolute top-20 left-8 w-28 h-auto z-10"
+        />
+      {/if}
+  
+      <!-- PANTS item -->
+      {#if outfit.Pants}
+        <img
+          src={svgToDataURL(outfit.Pants.image)}
+          alt="Pants"
+          class="absolute top-40 left-10 w-24 h-auto z-10"
+        />
+      {/if}
+  
+      <!-- SHOES item -->
+      {#if outfit.Shoes}
+        <img
+          src={svgToDataURL(outfit.Shoes.image)}
+          alt="Shoes"
+          class="absolute bottom-0 left-12 w-20 h-auto z-10"
+        />
+      {/if}
+  
+      <!-- ACCESSORY item -->
+      {#if outfit.Accessory}
+        <img
+          src={svgToDataURL(outfit.Accessory.image)}
+          alt="Accessory"
+          class="absolute top-14 right-6 w-16 h-auto z-10"
+        />
+      {/if}
+    </div>
+  </section>
+  
  
     <section class="w-full max-w-md mt-8 mx-auto">
       <ul>
@@ -328,12 +379,35 @@
 </PageContainer>
  
 <style>
+  /* The .mascot class becomes a container for the base beaver plus any outfit items */
   .mascot {
-    width: 150px;
-    height: 200px;
-    background-color: lightgray;
-    border-radius: 50%;
-    margin: 0 10;
     position: relative;
+    width: 300px;   /* Adjust width to your desired size */
+    height: 350px;  /* Adjust height to match your base beaver image */
+    margin: 0 auto; /* Center horizontally */
+    /* background-color, border-radius removed to avoid covering the beaver */
   }
+
+  /* Example of a base beaver image inside the container */
+  .beaver-base {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; 
+    z-index: 1; 
+  }
+
+  /* Example for an item, e.g., Head */
+  .item-head {
+    position: absolute;
+    top: 10px;   /* Adjust to position on the beaver’s head */
+    left: 50px;  /* Adjust horizontally */
+    width: 80px; /* Adjust size of the item */
+    height: auto;
+    z-index: 2;  /* Above the base beaver */
+  }
+
+  /* Additional item classes (e.g. item-shirt, item-pants, etc.) can go here */
 </style>
