@@ -7,6 +7,7 @@
   let showPassword = false;
   let email = '';
   let password = '';
+  let error = '';
 
   const togglePasswordVisibility = () => {
     showPassword = !showPassword;
@@ -18,35 +19,39 @@
     const loginData = { email, password };
 
     try {
-      console.log('Attempting login with:', email);
-      const response = await fetch('http://localhost:3012/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(loginData),
-      });
+        console.log('Attempting login with:', email);
+        const response = await fetch('http://localhost:3012/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(loginData),
+        });
 
-      const result = await response.json();
-      console.log('Login response:', result);
+        const result = await response.json();
+        console.log('Login response:', result);
 
-      if (response.ok && result.user) {
-        // Store the user ID in localStorage
-        localStorage.setItem('userId', result.user.id.toString());
-        console.log('Stored userId in localStorage:', result.user.id);
-        
-        // You can also store other user data if needed
-        localStorage.setItem('userName', result.user.name);
-        localStorage.setItem('userEmail', result.user.email);
-        
-        goto('/home'); // Redirect to dashboard
-      } else {
-        console.error('Login failed:', result.message);
-        alert(result.message || 'Login failed');
-      }
-    } catch (error) {
-      console.error('Error during login:', error);
-      alert('An error occurred during login.');
+        if (response.ok) {
+            // Store both ID and email
+            localStorage.setItem('userId', result.user.id.toString());
+            localStorage.setItem('userEmail', result.user.email);
+            console.log('Stored in localStorage:', {
+                userId: localStorage.getItem('userId'),
+                userEmail: localStorage.getItem('userEmail')
+            });
+
+            // Check if questionnaire is completed
+            if (!result.user.completedQuestionnaire) {
+                goto('/questionnaire');
+            } else {
+                goto('/home');
+            }
+        } else {
+            error = result.message || 'Login failed';
+        }
+    } catch (err) {
+        console.error('Login error:', err);
+        error = 'An error occurred during login';
     }
-};
+  };
 
   // Animation for the logo
   let logoScale = tweened(1, {
@@ -80,6 +85,12 @@
   <!-- Login Form Section -->
   <h2 class="text-xl font-semibold mb-2" in:fade={{ delay: 200, duration: 500 }}>Login</h2>
   <p class="text-gray-600 mb-6" in:fade={{ delay: 300, duration: 500 }}>Welcome back! Please login to your account.</p>
+
+  {#if error}
+    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+      <span class="block sm:inline">{error}</span>
+    </div>
+  {/if}
 
   <form
     on:submit={handleLogin}
