@@ -3,8 +3,7 @@
   import { tweened } from 'svelte/motion';
   import { cubicOut } from 'svelte/easing';
   import { goto } from '$app/navigation';
-  import { user } from '$lib/stores/userStore'; // Correctly import the user store
-
+  import { user } from '$lib/stores/userStore'; // Import the user store
 
   let showPassword = false;
   let email = '';
@@ -27,11 +26,28 @@
       });
 
       const result = await response.json();
+      console.log("Login response:", result); // ✅ Debugging API response
 
       if (response.ok) {
+        if (!result.user.total) {
+          console.warn("⚠️ Warning: `total` is missing from API response! Defaulting to 0.");
+        }
 
-        user.set(result.user)
-        goto('/home'); // Redirect to dashboard
+        // ✅ Store the user data in the Svelte store & localStorage
+        const userData = {
+          id: result.user.id,
+          name: result.user.name,
+          email: result.user.email,
+          completedQuestionnaire: result.user.completedQuestionnaire,
+          total: result.user.total ?? 0, // Default to 0 if missing
+        };
+
+        user.set(userData);
+        localStorage.setItem("user", JSON.stringify(userData)); // ✅ Ensure persistence
+
+        console.log("Updated user store after login:", userData); // ✅ Debugging
+
+        goto('/home'); // Redirect to home page
       } else {
         alert(result.message || 'Login failed');
       }
@@ -50,6 +66,7 @@
   // Animate logo on component mount
   $: logoScale.set(1.1);
 </script>
+
 
 <main class="relative flex flex-col items-center justify-center min-h-screen bg-gray-50 p-6 overflow-hidden">
   <!-- Slot for Background Elements -->
