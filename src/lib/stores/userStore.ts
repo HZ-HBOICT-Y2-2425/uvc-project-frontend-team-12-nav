@@ -5,14 +5,20 @@ export interface User {
   name: string;
   email: string;
   completedQuestionnaire: boolean;
-  total: number; // ✅ Ensure total exists
+  total: number;
 }
 
-// ✅ Load from localStorage correctly
+// ✅ Load user data from localStorage (if available)
 const storedUser = typeof window !== 'undefined' ? localStorage.getItem('user') : null;
 export const user = writable<User | null>(storedUser ? JSON.parse(storedUser) : null);
 
-// ✅ Debugging: Log user store updates
+// ✅ Automatically update localStorage when user changes
 user.subscribe((value) => {
-  console.log("Updated User Store:", value); // ✅ Check if total is being stored
+  if (typeof window !== 'undefined') {
+    if (value) {
+      localStorage.setItem('user', JSON.stringify(value)); // ✅ Save user data
+    } else {
+      localStorage.removeItem('user'); // ✅ Clear on logout
+    }
+  }
 });
