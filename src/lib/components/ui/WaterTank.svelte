@@ -9,7 +9,7 @@
 </script>
 
 <div
-  class="relative w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 my-8
+  class="relative w-64 h-64 sm:w-80 sm:h-80 md:w-96 md:h-96 my-8 mx-auto
          rounded-full bg-gray-100 overflow-hidden shadow-lg"
 >
   <!-- Base Water Layer -->

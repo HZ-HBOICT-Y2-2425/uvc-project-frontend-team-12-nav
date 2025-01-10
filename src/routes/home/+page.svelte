@@ -6,7 +6,7 @@
   import WaterTank from '$lib/components/ui/WaterTank.svelte';
   import NavigationButton from '$lib/components/ui/NavigationButton.svelte';
 
-  const totalCapacity = 15000; // Tank total capacity
+  const totalCapacity = 150000; // Tank total capacity
   let currentUsage = 0;       // Initialize total usage to 0
   let weeklySaving = 0;       // Initialize weekly saving to 0
   let error = '';

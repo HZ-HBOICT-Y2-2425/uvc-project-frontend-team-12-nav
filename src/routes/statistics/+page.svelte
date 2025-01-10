@@ -12,7 +12,7 @@
   import AnimatedNumber from '$lib/components/AnimatedNumber.svelte';
 
   let mounted = false;
-  let weeklyTarget = 1500; // Weekly target in liters
+  let weeklyTarget = 150000; // Weekly target in liters
   let isLoading = true;
   let errorMessage: string | null = null;
 
