@@ -39,7 +39,7 @@
   $: console.log('Today:', today); // Debugging
 
   // Define your backend API base URL
-  const API_BASE_URL = 'http://localhost:3011/waterlog'; 
+  const API_BASE_URL = 'http://localhost:3011/waterlog';
 
   // Define cost per liter in EUR (Set to actual value in Netherlands)
   const costPerLiter = 0.02; // Example: 0.02 EUR per liter

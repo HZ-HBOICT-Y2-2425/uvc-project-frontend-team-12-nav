@@ -6,9 +6,16 @@
   import WaterTank from '$lib/components/ui/WaterTank.svelte';
   import NavigationButton from '$lib/components/ui/NavigationButton.svelte';
 
-  const totalCapacity = 150000; // Tank total capacity
-  let currentUsage = 0;       // Initialize total usage to 0
-  let weeklySaving = 0;       // Initialize weekly saving to 0
+  // If you already have Svelte stores for dailyUsage, monthlyUsage, etc.
+  // import { dailyUsage, monthlyUsage } from '$lib/stores/waterData';
+  // Otherwise, we can just use local variables for demonstration.
+
+  const API_BASE_URL = 'http://localhost:3011/waterlog';
+  const totalCapacity = 150000;  // Example tank capacity
+
+  let currentUsage = 0;   // This is what you display in <WaterTank />
+  let weeklySaving = 0;   // Already part of your code
+  let isLoading = false;
   let error = '';
 
   const navigationButtons = [
@@ -17,6 +24,7 @@
     { label: 'Community', action: () => goto('/community') }
   ];
 
+  // Combine your existing logic with the new "fetchData" approach:
   const fetchUserData = async () => {
     try {
       const userEmail = localStorage.getItem('userEmail');
@@ -28,33 +36,85 @@
         return;
       }
 
-      // First, fetch user questionnaire data
+      // 1. Fetch user questionnaire data
       const userResponse = await fetch(`http://localhost:3012/current-user?userId=${userId}`);
       const userData = await userResponse.json();
 
       if (userResponse.ok && userData.user.questionnaire) {
-        // Use the waterUsage from questionnaire as currentUsage
+        // Use waterUsage from questionnaire as initial currentUsage
         currentUsage = userData.user.questionnaire.waterUsage || 0;
         console.log('Questionnaire water usage:', currentUsage);
       }
 
-      // Then fetch additional water log data
-      const waterLogResponse = await fetch(`http://localhost:3011/waterlog/total?userId=${userId}`);
-      const waterLogData = await waterLogResponse.json();
+      // 2. Fetch water usage stats from your /stats endpoint
+      const statsResponse = await fetch(`${API_BASE_URL}/stats?userId=${userId}`);
+      if (!statsResponse.ok) throw new Error('Failed to fetch water usage stats');
       
-      if (waterLogResponse.ok) {
-        // Add any additional water usage from water logs
-        currentUsage += waterLogData.totalWaterUsed || 0;
-        weeklySaving = waterLogData.weeklySaving || 0;
-        console.log('Total water usage:', currentUsage, 'Weekly saving:', weeklySaving);
+      const statsData = await statsResponse.json();
+      console.log('Fetched stats data:', statsData);
+
+      // OPTIONAL: Set them in Svelte stores if you have them:
+      // dailyUsage.set(statsData.stats.dailyUsage);
+      // monthlyUsage.set(statsData.stats.monthlyUsage);
+
+      // Now sum the monthly usage
+      let monthlySum = 0;
+      for (const month of statsData.stats.monthlyUsage) {
+        // If you just want the total usage for the entire month:
+        monthlySum += month.totalUsage || 0;
+
+        // (Or if you want to explicitly sum the breakdown categories, you could do so:)
+        // monthlySum += (
+        //   (month.breakdown?.shower?.usage || 0) +
+        //   (month.breakdown?.toilet?.usage || 0) +
+        //   (month.breakdown?.sink?.usage || 0) +
+        //   (month.breakdown?.washing?.usage || 0) +
+        //   ((month.breakdown?.other?.Cooking || 0)
+        //     + (month.breakdown?.other?.Cleaning || 0)
+        //     + (month.breakdown?.other?.Gardening || 0)
+        //     + (month.breakdown?.other?.Drinking || 0))
+        // );
       }
-    } catch (error) {
-      console.error('Error fetching user data:', error);
+      console.log('Sum of all monthly usage:', monthlySum);
+
+      // 3. Fetch total water usage from your /total endpoint
+      const totalResponse = await fetch(`${API_BASE_URL}/total?userId=${userId}`);
+      if (!totalResponse.ok) throw new Error('Failed to fetch total water usage');
+
+      const totalData = await totalResponse.json();
+      console.log('Fetched total data:', totalData);
+
+      weeklySaving = totalData.weeklySaving || 0;
+      const totalWaterUsed = totalData.totalWaterUsed || 0;
+
+      // 4. Decide how to combine the data
+      // In your current code, you add totalWaterUsed to currentUsage. 
+      // You can also add your monthlySum to it if you wish. 
+      // But watch out for double-counting:
+      // The monthly sum might already be included in totalWaterUsed (depending on your backend logic).
+      // 
+      // If totalWaterUsed is an "all-time" total, 
+      // and monthlySum is just the sum of usage for certain months, 
+      // you might not want to add them both. 
+      // For demonstration, let's assume monthlySum is separate and should be added:
+      
+      currentUsage += totalWaterUsed; // existing logic
+      currentUsage += monthlySum;     // add the sum of monthly usage if needed
+
+      console.log(
+        `currentUsage after questionnaire + monthly usage + totalWaterUsed = ${currentUsage}`
+      );
+      
+    } catch (err) {
+      console.error('Error fetching user data:', err);
       error = 'Failed to load water usage data';
+    } finally {
+      isLoading = false;
     }
   };
 
   onMount(() => {
+    isLoading = true;
     fetchUserData();
   });
 </script>
@@ -69,6 +129,7 @@
       </div>
     {/if}
 
+    <!-- Water Tank button -->
     <button type="button" on:click={() => goto("/waterlog")} class="w-full" aria-label="Go to water log">
       <WaterTank
         {currentUsage}
