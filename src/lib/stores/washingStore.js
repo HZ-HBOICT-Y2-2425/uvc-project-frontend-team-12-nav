@@ -90,7 +90,6 @@ function createWashingStore() {
         alert(`Error logging washing usage: ${data.message}`);
       } else {
         console.log('Washing usage logged:', data);
-        alert('Washing usage logged successfully!');
       }
     } catch (error) {
       console.error('Error sending wash data:', error);

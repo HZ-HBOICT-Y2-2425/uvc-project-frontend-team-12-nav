@@ -151,7 +151,6 @@ function createTimerStore() {
 
             if (response.ok) {
                 console.log('Shower usage logged:', data);
-                alert('Shower usage logged successfully!');
             } else {
                 console.error('Error logging shower usage:', data);
                 alert(`Error: ${data.message}`);
