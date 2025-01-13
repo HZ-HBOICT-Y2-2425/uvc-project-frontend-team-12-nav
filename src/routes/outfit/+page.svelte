@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import Header from "$lib/components/layout/Header.svelte";
   import PageContainer from "$lib/components/layout/PageContainer.svelte";
+  import { goto } from '$app/navigation';
  
   const showBack = true;
 
@@ -195,16 +196,20 @@
 <PageContainer>
   <Header title="Outfit" {showBack} backRoute="/inventory"/>
 
-  <!-- Debug info -->
-  <div class="fixed top-4 left-4 bg-gray-100 p-2 rounded text-xs">
-    User ID: {currentUser?.id ?? 'none'}<br>
-    Balance: {userBalance}
+    <!-- Back button -->
+    <div class="absolute top-4 left-4 z-10">
+      <button 
+          class="px-3 py-1 bg-red-500 text-white rounded-lg shadow-lg hover:bg-red-600 transition-colors text-sm"
+          on:click={() => goto('/inventory')}
+      >
+          Back
+      </button>
   </div>
+
 
   <!-- Balance Display -->
   <div class="fixed top-16 right-4 bg-green-500 text-white px-4 py-2 rounded-full shadow-lg z-40">
     <span class="font-bold">🌿 {userBalance}</span>
-    <span class="text-xs block">(ID: {currentUser?.id})</span>
   </div>
  
   {#if loading}

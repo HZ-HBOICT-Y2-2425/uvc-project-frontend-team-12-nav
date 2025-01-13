@@ -1,4 +1,7 @@
 <script>
+  
+  import {goto} from '$app/navigation';
+
     // Redeemable items array with additional details
     const redeemableItems = [
       {
@@ -38,6 +41,17 @@
     <div class="green-card">
       <h1 class="heading">Redeem</h1>
     </div>
+
+
+           <!-- Back button -->
+           <div class="absolute top-4 left-4 z-10">
+            <button 
+              class="px-4 py-2 bg-red-500 text-white rounded-lg shadow-lg hover:bg-red-600 transition-colors"
+              on:click={() => goto('/profile')}
+            >
+              Back
+            </button>
+          </div>
   
     <!-- Redeemable items list -->
     <div class="redeemable-list">

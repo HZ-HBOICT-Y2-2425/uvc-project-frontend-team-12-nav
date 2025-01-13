@@ -3,6 +3,7 @@
   import { slide, fade } from 'svelte/transition';
   import { tweened } from 'svelte/motion';
   import { cubicOut } from 'svelte/easing';
+  import { goto } from '$app/navigation';
   import {
     dailyUsage,
     monthlyUsage,
@@ -42,7 +43,7 @@
   const API_BASE_URL = 'http://localhost:3011/waterlog';
 
   // Define cost per liter in EUR (Set to actual value in Netherlands)
-  const costPerLiter = 0.02; // Example: 0.02 EUR per liter
+  const costPerLiter = 0.002; // Example: 0.02 EUR per liter
 
   // Define water used to chop down one tree in liters
   const waterUsedPerTree = 1000; // Example: 1000 liters per tree
@@ -101,14 +102,15 @@
 </script>
 
 <div class="w-full max-w-7xl mx-auto p-4 space-y-8">
-  <!-- Back Button -->
-  <button
-    on:click={() => window.history.back()}
-    class="flex items-center px-3 py-2 bg-red-200 text-white-700 rounded hover:bg-red-300 transition-colors duration-300"
-    aria-label="Go Back"
-  >
-    Back
-  </button>
+    <!-- Back button -->
+    <div class="absolute top-4 left-4 z-10">
+      <button 
+          class="px-3 py-1 bg-red-500 text-white rounded-lg shadow-lg hover:bg-red-600 transition-colors text-sm"
+          on:click={() => goto('/profile')}
+      >
+          Back
+      </button>
+  </div>
 
   {#if isLoading}
     <!-- Loader Section -->

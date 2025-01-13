@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { writable } from 'svelte/store';
+  import { goto } from '$app/navigation';
 
   // Reactive store for the water level
   const waterLevel = writable(0); // Current water level
@@ -111,6 +112,17 @@
       </div>
     </div>
 
+
+       <!-- Back button -->
+       <div class="absolute top-4 left-4 z-10">
+        <button 
+          class="px-4 py-2 bg-red-500 text-white rounded-lg shadow-lg hover:bg-red-600 transition-colors"
+          on:click={() => goto('/home')}
+        >
+          Back
+        </button>
+      </div>
+
     <!-- Add Water Button -->
     <button
       class="mt-6 px-6 py-2 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 transition"
@@ -163,18 +175,3 @@
   </footer>
 </main>
 
-<!-- GET /api/water-level:
-
-javascript
-Copy code
-app.get('/api/water-level', (req, res) => {
-  res.json({ currentWaterLevel: 8000 }); // Replace with your database logic
-});
-POST /api/add-water:
-
-javascript
-Copy code
-app.post('/api/add-water', (req, res) => {
-  const newWaterLevel = 8000 + 1000; // Replace with your database logic
-  res.json({ newWaterLevel });
-}); -->
