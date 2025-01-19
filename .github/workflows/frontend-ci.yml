@@ -56,18 +56,26 @@ jobs:
           CI: true
         run: npm test -- --coverage
 
-      # Step 7: Upload test coverage report
+      # Step 7: Enforce Coverage Threshold
+      - name: Enforce Coverage Threshold
+        run: |
+          if [ $(grep 'Statements' coverage/summary.txt | awk '{print $3}' | sed 's/%//') -lt 80 ]; then
+            echo "Coverage is below 80%!"
+            exit 1
+          fi
+
+      # Step 8: Upload test coverage report
       - name: Upload Coverage Report
         uses: actions/upload-artifact@v3
         with:
           name: coverage-report
           path: coverage/
 
-      # Step 8: Build the project
+      # Step 9: Build the project
       - name: Build frontend
         run: npm run build
 
-      # Step 9: Upload build artifacts
+      # Step 10: Upload build artifacts
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v3
         with:
