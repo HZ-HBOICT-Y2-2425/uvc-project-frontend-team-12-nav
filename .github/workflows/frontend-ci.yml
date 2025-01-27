@@ -20,7 +20,6 @@ jobs:
   build-and-test:
     name: Build and Test Frontend
     runs-on: ubuntu-latest
-
     steps:
       # Step 1: Checkout the code
       - name: Checkout code
@@ -63,11 +62,11 @@ jobs:
           name: coverage-report
           path: coverage/
 
-      # Step 8: Build the project
+      # Step 8: Build the project (produces static files in e.g. .svelte-kit/output)
       - name: Build frontend
         run: npm run build
 
-      # Step 9: Upload build artifacts
+      # Step 9: Upload build artifacts so other jobs can access them
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -76,11 +75,10 @@ jobs:
 
   codeql-analysis:
     name: CodeQL Analysis
-    needs: build-and-test # Ensure build and test steps complete first
+    needs: build-and-test  # Ensure build and test steps complete first
     runs-on: ubuntu-latest
-
     steps:
-      # Step 1: Checkout the repository
+      # Step 1: Checkout
       - name: Checkout repository
         uses: actions/checkout@v3
 
@@ -96,3 +94,27 @@ jobs:
         uses: github/codeql-action/analyze@v3
         with:
           output: ../results
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build-and-test  # runs after build/test job completes successfully
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Check out
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      # Step 2: Download the build artifacts
+      - name: Download build artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+          path: build-artifacts
+
+      # Step 3: Deploy with GitHub Pages
+      - name: Deploy with GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages        # The branch to deploy to
+          folder: build-artifacts # The folder you downloaded your static site into
