@@ -6,7 +6,7 @@ on:
       - main
       - develop
       - pipeline
-      
+      - feature/pipeline
   pull_request:
     branches:
       - main
