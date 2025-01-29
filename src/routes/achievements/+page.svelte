@@ -17,7 +17,7 @@
     </div>
 
     <!-- Page Header -->
-    <Header title="Achievements" showBack={true} backRoute="/profile"/>
+    <Header title="Achievements"/>
 
     <!-- Achievements List -->
     <AchievementsList />
