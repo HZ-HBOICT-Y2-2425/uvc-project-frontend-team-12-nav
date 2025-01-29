@@ -10,8 +10,7 @@
       title: 'Stylish Eco-Runners',
       originalPrice: '€50.00',
       discountedPrice: '€30.00',
-      link: 'https://www.nike.com/nl/t/air-force-1-07-se-damesschoenen-fwDJ95/HQ1497-099?_gl=1*zllhej*_up*MQ..*_gs*MQ..&gclid=Cj0KCQiAwOe8BhCCARIsAGKeD56nmbMpYdwiRQbZTT_vbsWLcOY54E0XILs0EXcq1fv4GWlU3Audzs4aAqouEALw_wcB&gclsrc=aw.ds'
-      // ↑ wrong link that developer putted here for some reason
+      link: 'https://www.rerun.allbirds.com/products/womens-tree-dasher-1_womens-tree-dashers_puukeko-white?color=puukeko-white-sole' // Link
     },
     {
       id: 2,
