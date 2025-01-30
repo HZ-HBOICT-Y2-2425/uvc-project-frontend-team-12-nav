@@ -30,6 +30,17 @@ export default [
         "warn",
         { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
       ],
+      // Additional Rules
+      "indent": ["error", 2],
+      "quotes": ["error", "single", { "avoidEscape": true }],
+      "semi": ["error", "always"],
+      "max-len": ["warn", { "code": 100 }],
+      "no-console": ["warn", { "allow": ["warn", "error"] }],
+      "consistent-return": "error",
+      "no-unused-expressions": "error",
+      "prefer-arrow-callback": "error",
+      "import/order": ["error", { "groups": ["builtin", "external", "internal"] }],
+      "@typescript-eslint/explicit-function-return-type": ["warn"],
     },
   },
   // TypeScript configuration
@@ -53,6 +64,17 @@ export default [
         "warn",
         { "argsIgnorePattern": "^_", "varsIgnorePattern": "^_" }
       ],
+      // Additional Rules
+      "indent": ["error", 2],
+      "quotes": ["error", "single", { "avoidEscape": true }],
+      "semi": ["error", "always"],
+      "max-len": ["warn", { "code": 100 }],
+      "no-console": ["warn", { "allow": ["warn", "error"] }],
+      "consistent-return": "error",
+      "no-unused-expressions": "error",
+      "prefer-arrow-callback": "error",
+      "import/order": ["error", { "groups": ["builtin", "external", "internal"] }],
+      "@typescript-eslint/explicit-function-return-type": ["warn"],
     },
   },
   // Ignore patterns
