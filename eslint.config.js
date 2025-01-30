@@ -2,6 +2,7 @@ import sveltePlugin from "eslint-plugin-svelte";
 import svelteParser from "svelte-eslint-parser";
 import tsParser from "@typescript-eslint/parser";
 import tsPlugin from "@typescript-eslint/eslint-plugin";
+import importPlugin from "eslint-plugin-import"; // Import the import plugin
 
 /** @type {import('eslint').Linter.FlatConfig[]} */
 export default [
@@ -22,6 +23,7 @@ export default [
     plugins: {
       svelte: sveltePlugin,
       "@typescript-eslint": tsPlugin,
+      import: importPlugin,
     },
     rules: {
       ...sveltePlugin.configs.recommended.rules,
@@ -57,6 +59,7 @@ export default [
     },
     plugins: {
       "@typescript-eslint": tsPlugin,
+      import: importPlugin, // Add the import plugin
     },
     rules: {
       ...tsPlugin.configs.recommended.rules,
